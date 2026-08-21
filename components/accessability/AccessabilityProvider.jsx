@@ -10,8 +10,8 @@ import {
 } from "react";
 import {
   applyAccessabilityPrefs,
-  AccessabilitY_CHANGE_EVENT,
-  DEFAULT_AccessabilitY_PREFS,
+  ACCESSABILITY_CHANGE_EVENT,
+  DEFAULT_ACCESSABILITY_PREFS,
   readAccessabilityPrefs,
   writeAccessabilityPrefs,
 } from "@/lib/accessability";
@@ -19,15 +19,15 @@ import {
 const AccessabilityContext = createContext(null);
 
 function subscribe(callback) {
-  window.addEventListener(AccessabilitY_CHANGE_EVENT, callback);
-  return () => window.removeEventListener(AccessabilitY_CHANGE_EVENT, callback);
+  window.addEventListener(ACCESSABILITY_CHANGE_EVENT, callback);
+  return () => window.removeEventListener(ACCESSABILITY_CHANGE_EVENT, callback);
 }
 
 export function AccessabilityProvider({ children }) {
   const prefs = useSyncExternalStore(
     subscribe,
     readAccessabilityPrefs,
-    () => DEFAULT_AccessabilitY_PREFS,
+    () => DEFAULT_ACCESSABILITY_PREFS,
   );
 
   useLayoutEffect(() => {

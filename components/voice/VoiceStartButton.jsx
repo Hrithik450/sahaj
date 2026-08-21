@@ -1,13 +1,16 @@
 "use client";
 
 import { Volume2 } from "lucide-react";
+import { useVoiceControl } from "@/components/voice/VoiceShell";
 
-export function VoiceStartButton({ onStart, voiceEnabled = false }) {
+export function VoiceStartButton() {
+  const { voiceEnabled, toggleVoice } = useVoiceControl();
+
   return (
     <button
       id="voice-start-btn"
       type="button"
-      onClick={onStart}
+      onClick={toggleVoice}
       aria-pressed={voiceEnabled}
       className="btn-ink flex items-center gap-2 bg-white px-4 py-2 text-sm font-bold sm:px-5"
       style={{
