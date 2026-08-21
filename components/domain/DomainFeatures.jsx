@@ -1,5 +1,6 @@
 "use client";
 
+import { CompanionChat } from "@/components/shared/CompanionChat";
 import { Simplifier } from "@/components/shared/Simplifier";
 import { StepWizard } from "@/components/shared/StepWizard";
 import { ServiceFinder } from "@/components/shared/ServiceFinder";
@@ -34,6 +35,10 @@ function FeatureBody({ feature, domain }) {
 
   if (feature.id === "transaction" && domain === "bank") {
     return <TransactionExplainer />;
+  }
+
+  if (feature.id === "companion") {
+    return <CompanionChat domain={domain} />;
   }
 
   return (
