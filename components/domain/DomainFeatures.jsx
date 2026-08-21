@@ -3,6 +3,7 @@
 import { Simplifier } from "@/components/shared/Simplifier";
 import { StepWizard } from "@/components/shared/StepWizard";
 import { ServiceFinder } from "@/components/shared/ServiceFinder";
+import { TransactionExplainer } from "@/components/shared/TransactionExplainer";
 import { BANK_NOTICES } from "@/data/bank/notices";
 import { BANK_TASKS } from "@/data/bank/tasks";
 import { GOV_FORMS } from "@/data/gov/forms";
@@ -29,6 +30,10 @@ function FeatureBody({ feature, domain }) {
 
   if (feature.id === "finder" && domain === "gov") {
     return <ServiceFinder />;
+  }
+
+  if (feature.id === "transaction" && domain === "bank") {
+    return <TransactionExplainer />;
   }
 
   return (
