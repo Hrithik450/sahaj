@@ -1,6 +1,7 @@
 import { Nav } from "@/components/landing/Nav";
 import { Hero } from "@/components/landing/Hero";
 import { Features } from "@/components/landing/Features";
+import { Footer } from "@/components/landing/Footer";
 import { ClientOnboardingOverlay } from "@/components/landing/ClientOnboardingOverlay";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
         <Hero />
         <Features />
       </main>
+      <Footer />
       <ClientOnboardingOverlay />
     </>
   );
