@@ -31,13 +31,6 @@
   }
 }
 
-/* ------------------------------------------------------------------ *
- * Sahaj landing theme (scoped under .paper)
- *
- * Colour tokens and printed-paper UI primitives borrowed from the Earn
- * marketing theme. Typography faces are wired in a later commit.
- * ------------------------------------------------------------------ */
-
 .paper {
   --cream: #f9f3ee;
   --ink: #14120e;
@@ -294,7 +287,6 @@ html {
   z-index: -1;
 }
 
-/* Landing typography — Bricolage Grotesque via `--font-landing`. */
 .landing {
   font-family: var(--font-landing), ui-sans-serif, system-ui, sans-serif;
 }
@@ -305,7 +297,6 @@ html {
   font-weight: 700;
 }
 
-/* Oval toggle for Government / Banking feature switch */
 .paper .domain-toggle {
   display: inline-flex;
   border: 2px solid var(--ink);
@@ -320,7 +311,9 @@ html {
   font-family: var(--font-caption);
   font-weight: 700;
   font-size: 0.95rem;
-  transition: background-color 140ms ease, color 140ms ease;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
 }
 
 .paper .domain-toggle button[data-active="true"] {
