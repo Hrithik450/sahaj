@@ -118,7 +118,7 @@ export function OnboardingOverlay() {
       ].map((style, i) => (
         <div
           key={i}
-          className="fixed z-[200] cursor-default"
+          className="fixed z-[200] cursor-pointer"
           style={style}
           onClick={dismiss}
         />

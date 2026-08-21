@@ -1,8 +1,8 @@
 # Sahaj
 
-Government and banking digital services, adapted to the person — accessibility profiles, voice guidance, and plain-language AI.
+Government and banking digital services, adapted to the person, accessibility profiles, voice guidance, and plain-language AI.
 
-Built for CodeFury 9.0 (Accessibility). JavaScript only · Next.js App Router · Auth.js · Neon · Gemini.
+Built for CodeFury 9.0 (Accessibility). JavaScript, Next.js, Auth.js, Neon db, Gemini.
 
 ## Quick start
 
@@ -20,7 +20,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Environment
 
-Copy `.env.example` → `.env.local`:
+Copy `.env.example` -> `.env.local`:
 
 | Variable               | Required         | Notes                                                                        |
 | ---------------------- | ---------------- | ---------------------------------------------------------------------------- |
@@ -69,8 +69,6 @@ lib/data/         Mock government and banking content
 4. Add Google OAuth redirect: `https://<domain>/api/auth/callback/google`
 5. After first deploy, run `npm run db:push` against the production database.
 
-See [DEMO.md](./DEMO.md) for the rehearsed demo path and troubleshooting.
-
 ## Stack
 
 - **Next.js 16** (App Router, JavaScript)
@@ -79,7 +77,3 @@ See [DEMO.md](./DEMO.md) for the rehearsed demo path and troubleshooting.
 - **Neon Postgres** + **Drizzle ORM**
 - **Google Gemini** (simplify, chat, explain — with offline fallbacks)
 - **Web Speech API** (TTS + live captions)
-
-## License
-
-Private — CodeFury hackathon project.
