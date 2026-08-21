@@ -13,7 +13,7 @@ import {
 import {
   DEFAULT_FEATURE_DOMAIN,
   FEATURE_DOMAINS,
-} from "@/data/features";
+} from "@/lib/data/features";
 
 const FEATURE_ICONS = {
   simplify: FileText,

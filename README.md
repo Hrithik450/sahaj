@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Sahaj
 
-## Getting Started
+Government and banking digital services, adapted to the person — accessibility profiles, voice guidance, and plain-language AI.
 
-First, run the development server:
+Built for CodeFury 9.0 (Accessibility). JavaScript only · Next.js App Router · Auth.js · Neon · Gemini.
+
+## Quick start
 
 ```bash
+npm install
+cp .env.example .env.local
+# Fill .env.local (see below)
+npm run db:push
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+**Guest mode** works without sign-in (prefs in `localStorage`). Google sign-in is optional and syncs accessibility prefs to Neon.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment
 
-## Learn More
+Copy `.env.example` → `.env.local`:
 
-To learn more about Next.js, take a look at the following resources:
+| Variable               | Required         | Notes                                                                        |
+| ---------------------- | ---------------- | ---------------------------------------------------------------------------- |
+| `DATABASE_URL`         | For auth/profile | Neon **transaction pooler** URL (`-pooler` in hostname). Required on Vercel. |
+| `AUTH_SECRET`          | For auth         | `openssl rand -base64 32`                                                    |
+| `AUTH_GOOGLE_ID`       | For Google login | OAuth Web client                                                             |
+| `AUTH_GOOGLE_SECRET`   | For Google login |                                                                              |
+| `AUTH_URL`             | For auth         | `http://localhost:3000` locally; production URL on Vercel                    |
+| `NEXT_PUBLIC_SITE_URL` | Recommended      | Same as public app URL                                                       |
+| `GEMINI_API_KEY`       | Optional         | Live AI; offline mock fallbacks work without it                              |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command           | Description                 |
+| ----------------- | --------------------------- |
+| `npm run dev`     | Development server          |
+| `npm run build`   | Production build            |
+| `npm run start`   | Run production build        |
+| `npm run lint`    | ESLint                      |
+| `npm run db:push` | Push Drizzle schema to Neon |
 
-## Deploy on Vercel
+## Project layout
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+app/              Routes and API (auth, profile, simplify, chat, explain)
+components/       UI (landing, domain features, voice, accessibility)
+lib/              Shared logic (ai, voice, auth, accessibility)
+lib/db/           Drizzle schema, Neon client, users, profiles
+lib/data/         Mock government and banking content
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Routes
+
+| Path          | Purpose                                     |
+| ------------- | ------------------------------------------- |
+| `/`           | Landing + accessibility setup               |
+| `/government` | Five government workflows (anchor sections) |
+| `/banking`    | Five banking workflows                      |
+| `/login`      | Optional Google sign-in                     |
+
+## Deploy (Vercel)
+
+1. Import the repo and set all env vars from `.env.example`.
+2. Use the Neon **pooler** `DATABASE_URL` (one HTTP client per serverless instance).
+3. Set `AUTH_URL` and `NEXT_PUBLIC_SITE_URL` to your production domain.
+4. Add Google OAuth redirect: `https://<domain>/api/auth/callback/google`
+5. After first deploy, run `npm run db:push` against the production database.
+
+See [DEMO.md](./DEMO.md) for the rehearsed demo path and troubleshooting.
+
+## Stack
+
+- **Next.js 16** (App Router, JavaScript)
+- **Tailwind CSS 4**
+- **Auth.js** (Google OAuth)
+- **Neon Postgres** + **Drizzle ORM**
+- **Google Gemini** (simplify, chat, explain — with offline fallbacks)
+- **Web Speech API** (TTS + live captions)
+
+## License
+
+Private — CodeFury hackathon project.

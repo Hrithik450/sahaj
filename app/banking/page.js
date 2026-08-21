@@ -1,7 +1,8 @@
 import { Nav } from "@/components/landing/Nav";
+import { Footer } from "@/components/landing/Footer";
 import { FeatureNav } from "@/components/domain/FeatureNav";
 import { DomainFeatures } from "@/components/domain/DomainFeatures";
-import { FEATURE_DOMAINS } from "@/data/features";
+import { FEATURE_DOMAINS } from "@/lib/data/features";
 
 const { features } = FEATURE_DOMAINS.banking;
 
@@ -35,6 +36,7 @@ export default function BankingPage() {
           />
         </div>
       </main>
+      <Footer />
     </>
   );
 }

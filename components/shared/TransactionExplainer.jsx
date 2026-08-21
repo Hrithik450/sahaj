@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { BANK_TRANSACTIONS } from "@/data/bank/transactions";
+import { BANK_TRANSACTIONS } from "@/lib/data/bank/transactions";
 import { pickLang } from "@/lib/i18n";
 import { speak } from "@/lib/voice";
 

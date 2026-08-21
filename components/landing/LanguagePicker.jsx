@@ -2,7 +2,7 @@
 
 import { Globe } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { LANGUAGES } from "@/data/languages";
+import { LANGUAGES } from "@/lib/data/languages";
 
 export function LanguagePicker() {
   const { prefs, setLanguage } = useAccessability();

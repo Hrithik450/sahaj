@@ -8,7 +8,7 @@ import {
   Volume2,
 } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { ACCESSIBILITY_NEEDS } from "@/data/accessability-needs";
+import { ACCESSIBILITY_NEEDS } from "@/lib/data/accessability-needs";
 
 const NEED_ICONS = {
   vision: ALargeSmall,

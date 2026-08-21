@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { GOV_SERVICES } from "@/data/gov/services";
+import { GOV_SERVICES } from "@/lib/data/gov/services";
 import { matchGovServices } from "@/lib/finder";
 import { pickLang } from "@/lib/i18n";
 import { speak } from "@/lib/voice";

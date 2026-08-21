@@ -1,5 +1,6 @@
 import { SITE } from "@/lib/site";
 import { AccessabilitySetup } from "@/components/landing/AccessabilitySetup";
+import { HeroIllustration } from "@/components/landing/HeroIllustration";
 
 export function Hero() {
   return (
@@ -35,21 +36,7 @@ export function Hero() {
         </div>
 
         <div className="relative">
-          <div
-            className="ink-card relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[1.75rem] bg-[var(--cream)] p-8"
-            aria-label="Hero illustration placeholder"
-          >
-            <div
-              className="absolute inset-0 opacity-40"
-              style={{
-                background:
-                  "radial-gradient(circle at 70% 30%, var(--sky) 0%, transparent 55%), radial-gradient(circle at 20% 80%, #e8e4ff 0%, transparent 50%)",
-              }}
-            />
-            <p className="caption relative z-[1] text-center text-sm sm:text-base">
-              Illustration placeholder: final artwork will appear here.
-            </p>
-          </div>
+          <HeroIllustration />
 
           <div
             className="ink-card absolute bottom-4 left-4 z-[2] max-w-[min(100%,16rem)] px-4 py-3.5 sm:bottom-6 sm:left-6 sm:max-w-xs sm:px-5 sm:py-4"

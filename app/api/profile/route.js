@@ -3,7 +3,7 @@ import {
   getProfileByUserId,
   profileRowToPrefs,
   upsertProfileForUser,
-} from "@/lib/profiles";
+} from "@/lib/db/profiles";
 import { NextResponse } from "next/server";
 
 export async function GET() {

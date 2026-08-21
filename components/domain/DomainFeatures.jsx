@@ -6,12 +6,12 @@ import { Simplifier } from "@/components/shared/Simplifier";
 import { StepWizard } from "@/components/shared/StepWizard";
 import { ServiceFinder } from "@/components/shared/ServiceFinder";
 import { TransactionExplainer } from "@/components/shared/TransactionExplainer";
-import { BANK_NOTICES } from "@/data/bank/notices";
-import { BANK_PRACTICE } from "@/data/bank/practice";
-import { BANK_TASKS } from "@/data/bank/tasks";
-import { GOV_FORMS } from "@/data/gov/forms";
-import { GOV_NOTICES } from "@/data/gov/notices";
-import { GOV_PRACTICE } from "@/data/gov/practice";
+import { BANK_NOTICES } from "@/lib/data/bank/notices";
+import { BANK_PRACTICE } from "@/lib/data/bank/practice";
+import { BANK_TASKS } from "@/lib/data/bank/tasks";
+import { GOV_FORMS } from "@/lib/data/gov/forms";
+import { GOV_NOTICES } from "@/lib/data/gov/notices";
+import { GOV_PRACTICE } from "@/lib/data/gov/practice";
 import { FeatureSection } from "@/components/domain/FeatureSection";
 
 function FeatureBody({ feature, domain }) {
@@ -52,12 +52,7 @@ function FeatureBody({ feature, domain }) {
     );
   }
 
-  return (
-    <p className="text-sm leading-relaxed text-[var(--muted)]">
-      Interactive tools for {feature.title.toLowerCase()} will appear here
-      shortly.
-    </p>
-  );
+  return null;
 }
 
 export function DomainFeatures({ features, domain, domainLabel }) {
