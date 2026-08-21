@@ -326,6 +326,25 @@ html {
   color: var(--ink);
 }
 
+html[data-font="lg"] {
+  font-size: 112.5%;
+}
+
+html[data-contrast="high"] {
+  --ink: #000000;
+  --muted: #2a2a2a;
+}
+
+html[data-need="motor"] .btn-ink,
+html[data-need="motor"] button.ink-card {
+  min-height: 3rem;
+  padding-inline: 1.25rem;
+}
+
+html[data-need="cognitive"] .ink-card {
+  box-shadow: -2px 2px 0 0 var(--ink);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .paper .footer-arrow,
   .paper .group:hover .footer-arrow,

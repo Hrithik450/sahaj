@@ -1,4 +1,5 @@
 import { Geist_Mono } from "next/font/google";
+import { AppProviders } from "@/components/accessability/AppProviders";
 import { landingFontClassName } from "@/assets/fonts";
 import { SITE, siteUrl } from "@/lib/site";
 import "./globals.css";
@@ -25,7 +26,9 @@ export default function RootLayout({ children }) {
       className={`${landingFontClassName} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <div className="paper min-h-full flex flex-col flex-1">{children}</div>
+        <div className="paper min-h-full flex flex-col flex-1">
+          <AppProviders>{children}</AppProviders>
+        </div>
       </body>
     </html>
   );

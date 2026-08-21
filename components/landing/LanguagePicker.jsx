@@ -1,17 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { Globe } from "lucide-react";
-import { DEFAULT_LANGUAGE, LANGUAGES } from "@/data/languages";
+import { useAccessability } from "@/components/accessability/AccessabilityProvider";
+import { LANGUAGES } from "@/data/languages";
 
-export function LanguagePicker({ value = DEFAULT_LANGUAGE, onChange }) {
-  const [language, setLanguage] = useState(value);
-
-  function handleChange(event) {
-    const next = event.target.value;
-    setLanguage(next);
-    onChange?.(next);
-  }
+export function LanguagePicker() {
+  const { prefs, setLanguage } = useAccessability();
 
   return (
     <div className="mt-6">
@@ -32,8 +26,8 @@ export function LanguagePicker({ value = DEFAULT_LANGUAGE, onChange }) {
         <select
           id="language-picker"
           name="language"
-          value={language}
-          onChange={handleChange}
+          value={prefs.language}
+          onChange={(event) => setLanguage(event.target.value)}
           className="appearance-none cursor-pointer bg-transparent pr-6 text-sm font-bold text-[var(--ink)] outline-none sm:text-[0.95rem]"
           style={{
             backgroundImage:

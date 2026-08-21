@@ -4,11 +4,11 @@ function scrollToFeature(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
-export function FeatureNav({ features }) {
+export function FeatureNav({ features, ariaLabel = "Features" }) {
   return (
     <nav
       className="flex flex-wrap justify-center gap-4 py-8 sm:gap-5"
-      aria-label="Government features"
+      aria-label={ariaLabel}
     >
       {features.map((feature) => (
         <button

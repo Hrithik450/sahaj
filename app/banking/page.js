@@ -3,36 +3,36 @@ import { FeatureNav } from "@/components/domain/FeatureNav";
 import { FeatureSection } from "@/components/domain/FeatureSection";
 import { FEATURE_DOMAINS } from "@/data/features";
 
-const { features } = FEATURE_DOMAINS.government;
+const { features } = FEATURE_DOMAINS.banking;
 
 export const metadata = {
-  title: "Government Services",
+  title: "Banking Services",
 };
 
-export default function GovernmentPage() {
+export default function BankingPage() {
   return (
     <>
       <Nav />
       <main className="px-6 pb-16">
         <div className="mx-auto max-w-6xl pt-10">
           <p className="caption text-xs font-semibold uppercase tracking-widest">
-            Government
+            Banking
           </p>
           <h1 className="landing-strong mt-2 text-[clamp(1.75rem,4vw,2.5rem)] leading-tight">
-            Finish government tasks with guided, accessible tools
+            Manage banking tasks with clarity and confidence
           </h1>
           <p className="caption mt-4 max-w-2xl text-base leading-relaxed">
             Pick a feature below or scroll through each section on this page.
-            Everything runs here — no separate pages for each workflow.
+            Everything runs here, no separate pages for each workflow.
           </p>
 
-          <FeatureNav features={features} ariaLabel="Government features" />
+          <FeatureNav features={features} ariaLabel="Banking features" />
 
           {features.map((feature) => (
             <FeatureSection
               key={feature.id}
               feature={feature}
-              domainLabel="Government service"
+              domainLabel="Banking service"
             >
               <p className="text-sm leading-relaxed text-[var(--muted)]">
                 Interactive tools for {feature.title.toLowerCase()} will appear
