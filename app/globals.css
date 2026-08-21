@@ -48,8 +48,8 @@
   --yellow: #f2c318;
   --sky: #a8d5f2;
 
-  --font-heading: var(--font-display, ui-sans-serif, system-ui, sans-serif);
-  --font-caption: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  --font-heading: var(--font-landing), ui-sans-serif, system-ui, sans-serif;
+  --font-caption: var(--font-landing), ui-sans-serif, system-ui, sans-serif;
 
   background-color: #ffffff;
   color: var(--ink);
@@ -292,6 +292,17 @@ html {
   background: var(--green);
   transform: rotate(-1.1deg);
   z-index: -1;
+}
+
+/* Landing typography — Bricolage Grotesque via `--font-landing`. */
+.landing {
+  font-family: var(--font-landing), ui-sans-serif, system-ui, sans-serif;
+}
+
+.landing .landing-strong,
+.paper .landing-strong {
+  font-family: var(--font-landing), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
 }
 
 /* Oval toggle for Government / Banking feature switch */
