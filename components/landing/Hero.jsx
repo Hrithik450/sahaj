@@ -8,16 +8,19 @@ export function Hero() {
         {/* Headline and setup area */}
         <div>
           <span
-            className="sticker mb-6 shadow-[-2px_2px_0_0_var(--ink)]"
+            className="sticker mb-6 shadow-[-1.5px_1.5px_0_0_var(--ink)]"
             style={{ backgroundColor: "var(--sky)" }}
           >
             Welcome to {SITE.name}
           </span>
 
-          <h1 className="landing-strong text-[clamp(2rem,4.5vw,2.75rem)] leading-[1.12]">
-            Digital services, made for{" "}
-            <span className="underline-swash" style={{ color: "var(--blue)" }}>
-              you.
+          <h1 className="landing-strong max-w-[28rem] text-[clamp(2rem,4.5vw,2.75rem)] leading-[1.12] sm:max-w-[34rem] lg:max-w-[40rem]">
+            <span className="block">Digital services,</span>
+            <span className="block">
+              made for{" "}
+              <span className="underline-swash" style={{ color: "var(--blue)" }}>
+                you.
+              </span>
             </span>
           </h1>
 
@@ -50,7 +53,6 @@ export function Hero() {
 
           <div
             className="ink-card absolute bottom-4 left-4 z-[2] max-w-[min(100%,16rem)] px-4 py-3.5 sm:bottom-6 sm:left-6 sm:max-w-xs sm:px-5 sm:py-4"
-            style={{ boxShadow: "-4px 4px 0 0 var(--ink)" }}
           >
             <p className="text-sm leading-snug sm:text-[0.95rem]">
               <span className="font-bold" style={{ color: "var(--green)" }}>

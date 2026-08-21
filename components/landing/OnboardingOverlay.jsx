@@ -133,7 +133,7 @@ export function OnboardingOverlay() {
           height: spotHeight,
           borderRadius: spotBR,
           boxShadow: "0 0 0 9999px rgba(0,0,0,0.52)",
-          outline: "2px solid rgba(255,255,255,0.32)",
+          outline: "1px solid rgba(255,255,255,0.32)",
           outlineOffset: 0,
         }}
       />

@@ -105,7 +105,7 @@ export function ServiceFinder() {
           {results.map((service) => (
             <article
               key={service.id}
-              className="rounded-xl border-2 border-[var(--ink)] bg-white p-4 sm:p-5"
+              className="rounded-xl border border-[var(--ink)] bg-white p-4 sm:p-5"
             >
               <h3 className="landing-strong text-lg">
                 {pickLang(service.title, prefs.language)}

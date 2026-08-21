@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NavAuth } from "@/components/auth/NavAuth";
 import { Logo } from "@/components/brand/Logo";
 import { VoiceStartButton } from "@/components/voice/VoiceStartButton";
 
@@ -45,7 +46,11 @@ export function Nav() {
           })}
         </nav>
 
-        <div className="col-start-3 justify-self-end" id="nav-actions">
+        <div
+          className="col-start-3 flex items-center justify-end gap-2 sm:gap-3"
+          id="nav-actions"
+        >
+          <NavAuth />
           <VoiceStartButton />
         </div>
       </div>

@@ -12,7 +12,7 @@ function MessageBubble({ role, content, live = false }) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[92%] rounded-xl border-2 border-[var(--ink)] px-4 py-3 text-sm leading-relaxed sm:max-w-[80%] sm:text-base ${
+        className={`max-w-[92%] rounded-xl border border-[var(--ink)] px-4 py-3 text-sm leading-relaxed sm:max-w-[80%] sm:text-base ${
           isUser
             ? "bg-[var(--blue)] text-white"
             : "bg-white text-[var(--ink)]"
@@ -127,7 +127,7 @@ export function CompanionChat({ domain = "gov" }) {
 
       <div
         ref={listRef}
-        className="grid max-h-[22rem] gap-3 overflow-y-auto rounded-xl border-2 border-[var(--ink)] bg-[var(--cream)] p-4"
+        className="grid max-h-[22rem] gap-3 overflow-y-auto rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-4"
         aria-label="Companion chat messages"
       >
         {messages.length === 0 && !streamingText && (

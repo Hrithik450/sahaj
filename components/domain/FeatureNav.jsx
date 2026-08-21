@@ -15,7 +15,7 @@ export function FeatureNav({ features, ariaLabel = "Features" }) {
           key={feature.id}
           type="button"
           onClick={() => scrollToFeature(feature.id)}
-          className="sticker sticker-oval sticker-label ink-lift w-[9.5rem] shadow-[-2px_2px_0_0_var(--ink)] sm:w-[10.5rem]"
+          className="sticker sticker-oval sticker-label ink-lift w-[9.5rem] shadow-[-1.5px_1.5px_0_0_var(--ink)] sm:w-[10.5rem]"
           style={{ backgroundColor: feature.iconBg }}
         >
           <span className="block leading-tight">{feature.title}</span>

@@ -11,7 +11,7 @@ const FOOTER_LINKS = [
 
 export function Footer() {
   return (
-    <footer id="footer" className="mt-4">
+    <footer id="footer" className="mt-8 sm:mt-6 lg:mt-4">
       <div className="footer-slab px-6 py-10 sm:px-10 sm:py-12">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
@@ -35,7 +35,7 @@ export function Footer() {
             </nav>
           </div>
 
-          <p className="mono mt-8 border-t-2 border-[var(--ink)] pt-6 text-center text-xs font-bold opacity-70">
+          <p className="mono mt-8 border-t border-[var(--ink)] pt-6 text-center text-xs font-bold opacity-70">
             © {new Date().getFullYear()} {SITE.name}. All rights reserved.
           </p>
         </div>

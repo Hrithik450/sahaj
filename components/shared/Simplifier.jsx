@@ -105,7 +105,7 @@ export function Simplifier({ domain, samples }) {
       )}
 
       {result && (
-        <div className="grid gap-4 rounded-xl border-2 border-[var(--ink)] bg-[var(--cream)] p-4 sm:p-5">
+        <div className="grid gap-4 rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-4 sm:p-5">
           <div>
             <p className="caption text-xs font-bold uppercase tracking-widest">
               Plain summary

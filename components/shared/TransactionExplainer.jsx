@@ -107,7 +107,7 @@ export function TransactionExplainer() {
       )}
 
       {result && (
-        <div className="grid gap-4 rounded-xl border-2 border-[var(--ink)] bg-[var(--cream)] p-4 sm:p-5">
+        <div className="grid gap-4 rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-4 sm:p-5">
           <div>
             <p className="caption text-xs font-bold uppercase tracking-widest">
               What happened
@@ -137,7 +137,7 @@ export function TransactionExplainer() {
 
           {result.suspicious && (
             <p
-              className="rounded-lg border-2 border-[var(--ink)] px-3 py-2 text-sm font-semibold"
+              className="rounded-lg border border-[var(--ink)] px-3 py-2 text-sm font-semibold"
               style={{ backgroundColor: "var(--yellow)" }}
             >
               This may be suspicious. Contact your bank fraud helpline if you

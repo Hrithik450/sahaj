@@ -71,7 +71,7 @@ export function StepWizard({ templates }) {
 
   if (completed) {
     return (
-      <div className="rounded-xl border-2 border-[var(--ink)] bg-[var(--cream)] p-5">
+      <div className="rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-5">
         <p className="landing-strong text-lg" style={{ color: "var(--green)" }}>
           All steps completed
         </p>

@@ -41,7 +41,7 @@ function getServiceChoices(correctServiceId) {
 
 function PracticeComplete({ onRetry }) {
   return (
-    <div className="rounded-xl border-2 border-[var(--ink)] bg-[var(--cream)] p-5">
+    <div className="rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-5">
       <p className="landing-strong text-lg" style={{ color: "var(--green)" }}>
         Great practice run
       </p>
@@ -63,7 +63,7 @@ function PracticeComplete({ onRetry }) {
 function MistakeHint({ hint, language }) {
   return (
     <p
-      className="rounded-lg border-2 border-[var(--ink)] px-3 py-2 text-sm leading-relaxed"
+      className="rounded-lg border border-[var(--ink)] px-3 py-2 text-sm leading-relaxed"
       style={{ backgroundColor: "var(--yellow)" }}
       role="alert"
     >
@@ -301,7 +301,7 @@ export function PracticeRunner({ scenarios }) {
         </label>
       )}
 
-      <p className="caption rounded-lg border-2 border-dashed border-[var(--ink)] bg-white px-3 py-2 text-xs leading-relaxed">
+      <p className="caption rounded-lg border border-dashed border-[var(--ink)] bg-white px-3 py-2 text-xs leading-relaxed">
         Safe practice only. Mistakes here help you learn — nothing is sent to a
         real office or bank.
       </p>

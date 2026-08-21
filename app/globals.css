@@ -41,6 +41,13 @@
   --yellow: #f2c318;
   --sky: #a8d5f2;
 
+  --ink-border: 1px;
+  --ink-shadow: -1.5px 1.5px 0 0 var(--ink);
+  --ink-shadow-hover: -2.5px 2.5px 0 0 var(--ink);
+  --ink-shadow-btn: -1px 1px 0 0 var(--ink);
+  --ink-shadow-btn-hover: -2px 2px 0 0 var(--ink);
+  --ink-focus-shadow: -1.5px 1.5px 0 0 var(--blue);
+
   --font-heading: var(--font-landing), ui-sans-serif, system-ui, sans-serif;
   --font-caption: var(--font-landing), ui-sans-serif, system-ui, sans-serif;
 
@@ -121,10 +128,10 @@ html {
 }
 
 .paper .ink-card {
-  border: 2px solid var(--ink);
+  border: var(--ink-border) solid var(--ink);
   border-radius: 1.25rem;
   background: #ffffff;
-  box-shadow: -3px 3px 0 0 var(--ink);
+  box-shadow: var(--ink-shadow);
 }
 
 .paper .ink-lift {
@@ -135,12 +142,12 @@ html {
 
 .paper .ink-lift:hover {
   transform: translate(1px, -1px);
-  box-shadow: -5px 5px 0 0 var(--ink);
+  box-shadow: var(--ink-shadow-hover);
 }
 
 .paper .sticker {
   display: inline-block;
-  border: 2px solid var(--ink);
+  border: var(--ink-border) solid var(--ink);
   border-radius: 999px;
   padding: 0.25rem 0.7rem;
   font-family: var(--font-mono), ui-monospace, monospace;
@@ -167,10 +174,10 @@ html {
 }
 
 .paper .btn-ink {
-  border: 2px solid var(--ink);
+  border: var(--ink-border) solid var(--ink);
   border-radius: 999px;
   font-weight: 800;
-  box-shadow: -2px 2px 0 0 var(--ink);
+  box-shadow: var(--ink-shadow-btn);
   transition:
     transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -178,30 +185,30 @@ html {
 
 .paper .btn-ink:hover {
   transform: translate(1px, -1px);
-  box-shadow: -4px 4px 0 0 var(--ink);
+  box-shadow: var(--ink-shadow-btn-hover);
 }
 
 .paper .btn-ink:active {
   transform: translate(-1px, 1px);
-  box-shadow: -1px 1px 0 0 var(--ink);
+  box-shadow: -0.5px 0.5px 0 0 var(--ink);
 }
 
 .paper .btn-ink:disabled {
   opacity: 0.55;
   cursor: not-allowed;
   transform: none;
-  box-shadow: -2px 2px 0 0 var(--ink);
+  box-shadow: var(--ink-shadow-btn);
 }
 
 .paper .nav-pill {
   background: var(--cream);
-  border-bottom: 2px solid var(--ink);
+  border-bottom: var(--ink-border) solid var(--ink);
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
 }
 
 .paper .ink-input {
-  border: 2px solid var(--ink);
+  border: var(--ink-border) solid var(--ink);
   border-radius: 0.85rem;
   background: #ffffff;
   padding: 0.7rem 0.95rem;
@@ -212,7 +219,7 @@ html {
 }
 
 .paper .ink-input:focus {
-  box-shadow: -3px 3px 0 0 var(--blue);
+  box-shadow: var(--ink-focus-shadow);
 }
 
 .paper .ink-input::placeholder {
@@ -235,19 +242,19 @@ html {
 
 .paper .footer-slab {
   background: var(--cream);
-  border-top: 2px solid var(--ink);
+  border-top: var(--ink-border) solid var(--ink);
   border-top-left-radius: 2rem;
   border-top-right-radius: 2rem;
 }
 
 .paper .footer-cta {
   font-family: var(--font-heading);
-  border-bottom: 3px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
   padding-bottom: 0.15rem;
 }
 
 .paper .footer-arrow {
-  box-shadow: -2px 2px 0 0 var(--ink);
+  box-shadow: var(--ink-shadow-btn);
   transition:
     transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -255,7 +262,7 @@ html {
 
 .paper .group:hover .footer-arrow {
   transform: translate(2px, -2px);
-  box-shadow: -4px 4px 0 0 var(--ink);
+  box-shadow: var(--ink-shadow-btn-hover);
 }
 
 .paper .footer-link {
@@ -299,10 +306,10 @@ html {
 
 .paper .domain-toggle {
   display: inline-flex;
-  border: 2px solid var(--ink);
+  border: var(--ink-border) solid var(--ink);
   border-radius: 999px;
   overflow: hidden;
-  box-shadow: -2px 2px 0 0 var(--ink);
+  box-shadow: var(--ink-shadow-btn);
 }
 
 .paper .domain-toggle button {
@@ -342,7 +349,7 @@ html[data-need="motor"] button.ink-card {
 }
 
 html[data-need="cognitive"] .ink-card {
-  box-shadow: -2px 2px 0 0 var(--ink);
+  box-shadow: -1px 1px 0 0 var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {

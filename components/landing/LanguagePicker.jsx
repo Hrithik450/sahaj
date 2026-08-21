@@ -11,7 +11,7 @@ export function LanguagePicker() {
     <div className="mt-6">
       <label
         htmlFor="language-picker"
-        className="flex items-center gap-3 rounded-[0.85rem] border-2 border-[var(--ink)] bg-[#f3f3f3] px-3.5 py-2.5 sm:px-4 sm:py-3"
+        className="flex items-center gap-3 rounded-[0.85rem] border border-[var(--ink)] bg-[#f3f3f3] px-3.5 py-2.5 sm:px-4 sm:py-3"
       >
         <Globe
           className="h-5 w-5 flex-none text-[var(--muted)]"

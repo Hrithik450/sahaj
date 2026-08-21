@@ -43,8 +43,8 @@ export function AccessibilityNeedCards() {
                 backgroundColor: isActive ? "var(--blue)" : "#ffffff",
                 color: isActive ? "#ffffff" : "var(--ink)",
                 boxShadow: isActive
-                  ? "-4px 4px 0 0 var(--ink)"
-                  : "-3px 3px 0 0 var(--ink)",
+                  ? "var(--ink-shadow-hover)"
+                  : "var(--ink-shadow)",
               }}
             >
               <span

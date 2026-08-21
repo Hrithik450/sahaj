@@ -2,7 +2,7 @@ export function FeatureSection({ feature, domainLabel = "Service", children }) {
   return (
     <section
       id={feature.id}
-      className="border-t-2 border-[var(--ink)] py-12 first:border-t-0 first:pt-4"
+      className="border-t border-[var(--ink)] py-12 first:border-t-0 first:pt-4"
     >
       <p className="caption text-xs font-semibold uppercase tracking-widest">
         {domainLabel}
