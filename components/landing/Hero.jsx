@@ -1,4 +1,5 @@
 import { SITE } from "@/lib/site";
+import { AccessibilityNeedCards } from "@/components/landing/AccessabilityNeedCards";
 
 export function Hero() {
   return (
@@ -25,7 +26,9 @@ export function Hero() {
             government and banking services easily and confidently.
           </p>
 
-          <div id="a11y-setup" className="mt-8 min-h-[12rem]" aria-hidden />
+          <div className="mt-8">
+            <AccessibilityNeedCards />
+          </div>
         </div>
 
         <div className="relative">
