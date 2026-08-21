@@ -1,6 +1,6 @@
 import { Nav } from "@/components/landing/Nav";
 import { FeatureNav } from "@/components/domain/FeatureNav";
-import { FeatureSection } from "@/components/domain/FeatureSection";
+import { DomainFeatures } from "@/components/domain/DomainFeatures";
 import { FEATURE_DOMAINS } from "@/data/features";
 
 const { features } = FEATURE_DOMAINS.banking;
@@ -23,23 +23,16 @@ export default function BankingPage() {
           </h1>
           <p className="caption mt-4 max-w-2xl text-base leading-relaxed">
             Pick a feature below or scroll through each section on this page.
-            Everything runs here, no separate pages for each workflow.
+            Everything runs here — no separate pages for each workflow.
           </p>
 
           <FeatureNav features={features} ariaLabel="Banking features" />
 
-          {features.map((feature) => (
-            <FeatureSection
-              key={feature.id}
-              feature={feature}
-              domainLabel="Banking service"
-            >
-              <p className="text-sm leading-relaxed text-[var(--muted)]">
-                Interactive tools for {feature.title.toLowerCase()} will appear
-                here shortly.
-              </p>
-            </FeatureSection>
-          ))}
+          <DomainFeatures
+            features={features}
+            domain="bank"
+            domainLabel="Banking service"
+          />
         </div>
       </main>
     </>

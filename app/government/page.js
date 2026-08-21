@@ -1,6 +1,6 @@
 import { Nav } from "@/components/landing/Nav";
 import { FeatureNav } from "@/components/domain/FeatureNav";
-import { FeatureSection } from "@/components/domain/FeatureSection";
+import { DomainFeatures } from "@/components/domain/DomainFeatures";
 import { FEATURE_DOMAINS } from "@/data/features";
 
 const { features } = FEATURE_DOMAINS.government;
@@ -28,18 +28,11 @@ export default function GovernmentPage() {
 
           <FeatureNav features={features} ariaLabel="Government features" />
 
-          {features.map((feature) => (
-            <FeatureSection
-              key={feature.id}
-              feature={feature}
-              domainLabel="Government service"
-            >
-              <p className="text-sm leading-relaxed text-[var(--muted)]">
-                Interactive tools for {feature.title.toLowerCase()} will appear
-                here shortly.
-              </p>
-            </FeatureSection>
-          ))}
+          <DomainFeatures
+            features={features}
+            domain="gov"
+            domainLabel="Government service"
+          />
         </div>
       </main>
     </>
