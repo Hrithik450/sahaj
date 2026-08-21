@@ -1,26 +1,337 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  --font-mono: var(--font-geist-mono, ui-monospace, monospace);
+  --color-sahaj-cream: #f9f3ee;
+  --color-sahaj-ink: #14120e;
+  --color-sahaj-muted: #636363;
+  --color-sahaj-blue: #2f4fe0;
+  --color-sahaj-green: #1e9e5a;
+  --color-sahaj-red: #e8442c;
+  --color-sahaj-yellow: #f2c318;
+  --color-sahaj-sky: #a8d5f2;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #ffffff;
+  --foreground: #14120e;
+}
+
+@layer base {
+  * {
+    border-color: color-mix(in oklab, var(--foreground) 12%, transparent);
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------ *
+ * Sahaj landing theme (scoped under .paper)
+ *
+ * Colour tokens and printed-paper UI primitives borrowed from the Earn
+ * marketing theme. Typography faces are wired in a later commit.
+ * ------------------------------------------------------------------ */
+
+.paper {
+  --cream: #f9f3ee;
+  --ink: #14120e;
+  --muted: #636363;
+  --blue: #2f4fe0;
+  --green: #1e9e5a;
+  --red: #e8442c;
+  --yellow: #f2c318;
+  --sky: #a8d5f2;
+
+  --font-heading: var(--font-display, ui-sans-serif, system-ui, sans-serif);
+  --font-caption: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+
+  background-color: #ffffff;
+  color: var(--ink);
+  font-family: var(--font-caption);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.paper section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+.paper .hero-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to bottom, rgba(20, 18, 14, 0.11) 1px, transparent 1px),
+    linear-gradient(to right, rgba(20, 18, 14, 0.11) 1px, transparent 1px);
+  background-size: 26px 26px;
+  background-position: top center;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 78%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 78%);
+}
+
+.paper .fade-out-bottom {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 55%,
+    rgba(0, 0, 0, 0.35) 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 55%,
+    rgba(0, 0, 0, 0.35) 82%,
+    transparent 100%
+  );
+}
+
+.paper .mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  .paper h1,
+  .paper h2,
+  .paper h3 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.06;
+    word-spacing: 0.09em;
+  }
+}
+
+.paper .caption {
+  font-family: var(--font-caption);
+  color: var(--muted);
+}
+
+.paper .display {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.paper .ink-card {
+  border: 2px solid var(--ink);
+  border-radius: 1.25rem;
+  background: #ffffff;
+  box-shadow: -3px 3px 0 0 var(--ink);
+}
+
+.paper .ink-lift {
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.paper .ink-lift:hover {
+  transform: translate(1px, -1px);
+  box-shadow: -5px 5px 0 0 var(--ink);
+}
+
+.paper .sticker {
+  display: inline-block;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.paper .sticker-oval {
+  border-radius: 50%;
+  padding: 0.85rem 1.5rem;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.paper .sticker-label {
+  font-family: var(--font-caption);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.paper .btn-ink {
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font-weight: 800;
+  box-shadow: -2px 2px 0 0 var(--ink);
+  transition:
+    transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.paper .btn-ink:hover {
+  transform: translate(1px, -1px);
+  box-shadow: -4px 4px 0 0 var(--ink);
+}
+
+.paper .btn-ink:active {
+  transform: translate(-1px, 1px);
+  box-shadow: -1px 1px 0 0 var(--ink);
+}
+
+.paper .btn-ink:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: -2px 2px 0 0 var(--ink);
+}
+
+.paper .nav-pill {
+  background: var(--cream);
+  border-bottom: 2px solid var(--ink);
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+
+.paper .ink-input {
+  border: 2px solid var(--ink);
+  border-radius: 0.85rem;
+  background: #ffffff;
+  padding: 0.7rem 0.95rem;
+  font-family: var(--font-caption);
+  width: 100%;
+  outline: none;
+  transition: box-shadow 140ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.paper .ink-input:focus {
+  box-shadow: -3px 3px 0 0 var(--blue);
+}
+
+.paper .ink-input::placeholder {
+  color: rgba(99, 99, 99, 0.7);
+}
+
+.paper .ink-select {
+  appearance: none;
+  padding-right: 2.4rem;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.95rem center;
+  background-size: 0.75rem;
+}
+
+.paper .ink-select[data-empty="true"] {
+  color: rgba(99, 99, 99, 0.7);
+}
+
+.paper .footer-slab {
+  background: var(--cream);
+  border-top: 2px solid var(--ink);
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+}
+
+.paper .footer-cta {
+  font-family: var(--font-heading);
+  border-bottom: 3px solid var(--ink);
+  padding-bottom: 0.15rem;
+}
+
+.paper .footer-arrow {
+  box-shadow: -2px 2px 0 0 var(--ink);
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.paper .group:hover .footer-arrow {
+  transform: translate(2px, -2px);
+  box-shadow: -4px 4px 0 0 var(--ink);
+}
+
+.paper .footer-link {
+  opacity: 0.7;
+  text-underline-offset: 3px;
+}
+
+.paper .footer-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.paper .underline-swash {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.paper .underline-swash::after {
+  content: "";
+  position: absolute;
+  left: -0.04em;
+  right: -0.04em;
+  bottom: -0.02em;
+  height: 0.11em;
+  border-radius: 999px;
+  background: var(--green);
+  transform: rotate(-1.1deg);
+  z-index: -1;
+}
+
+/* Oval toggle for Government / Banking feature switch */
+.paper .domain-toggle {
+  display: inline-flex;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: -2px 2px 0 0 var(--ink);
+}
+
+.paper .domain-toggle button {
+  flex: 1;
+  padding: 0.65rem 1.5rem;
+  font-family: var(--font-caption);
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.paper .domain-toggle button[data-active="true"] {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.paper .domain-toggle button[data-active="false"] {
+  background: #ffffff;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper .footer-arrow,
+  .paper .group:hover .footer-arrow,
+  .paper .ink-lift,
+  .paper .btn-ink {
+    transition: none;
+  }
+
+  .paper .ink-lift:hover,
+  .paper .btn-ink:hover {
+    transform: none;
+  }
 }
