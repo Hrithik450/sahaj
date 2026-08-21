@@ -50,7 +50,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="section-x overflow-hidden pt-14 pb-6 sm:pt-14 sm:pb-10 md:pt-16 md:pb-14 lg:py-16"
+      className="section-x overflow-hidden pt-16 pb-6 sm:pt-16 sm:pb-10 md:pt-20 md:pb-14 lg:pt-24 lg:pb-16"
     >
       <div className="relative mx-auto flex max-w-6xl flex-col lg:block lg:min-h-[30rem]">
         <div className="relative z-0 w-full lg:w-[60%]">

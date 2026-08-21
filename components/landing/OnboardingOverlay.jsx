@@ -24,9 +24,9 @@ export const languageOverlay = {
     kn: "ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
   },
   description: {
-    en: "Tap the language button to switch between English, Hindi, and Kannada.",
-    hi: "अंग्रेज़ी, हिंदी और कन्नड़ के बीच बदलने के लिए भाषा बटन दबाएं।",
-    kn: "ಇಂಗ್ಲಿಷ್, ಹಿಂದಿ ಮತ್ತು ಕನ್ನಡ ನಡುವೆ ಬದಲಾಯಿಸಲು ಭಾಷೆ ಬಟನ್ ಅನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ.",
+    en: "Tap the language button to switch between English and Kannada.",
+    hi: "अंग्रेज़ी और कन्नड़ के बीच बदलने के लिए भाषा बटन दबाएं।",
+    kn: "ಇಂಗ್ಲಿಷ್ ಮತ್ತು ಕನ್ನಡ ನಡುವೆ ಬದಲಾಯಿಸಲು ಭಾಷೆ ಬಟನ್ ಅನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ.",
   },
 };
 

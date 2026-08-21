@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  ALargeSmall,
-  BookOpen,
-  ListOrdered,
-  MousePointerClick,
-  Volume2,
-} from "lucide-react";
+import { ALargeSmall, ListOrdered, Volume2 } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { ACCESSIBILITY_NEEDS } from "@/lib/data/accessability-needs";
 import { pickLang } from "@/lib/i18n";
@@ -33,18 +27,6 @@ const NEEDS = {
       kn: "ಮಾತನಾಡಿ ಮತ್ತು ಕೇಳಿ",
     },
   },
-  motor: {
-    title: {
-      en: "Easier Interaction",
-      hi: "आसान इंटरैक्शन",
-      kn: "ಸುಲಭ ಸಂವಹನ",
-    },
-    description: {
-      en: "Bigger buttons, simple flow",
-      hi: "बड़े बटन, सरल प्रवाह",
-      kn: "ದೊಡ್ಡ ಬಟನ್‌ಗಳು, ಸರಳ ಹರಿವು",
-    },
-  },
   cognitive: {
     title: { en: "Simple Steps", hi: "सरल चरण", kn: "ಸರಳ ಹಂತಗಳು" },
     description: {
@@ -53,22 +35,12 @@ const NEEDS = {
       kn: "ಒಂದು ಸಮಯದಲ್ಲಿ ಒಂದು ಹಂತ",
     },
   },
-  literacy: {
-    title: { en: "Simple Language", hi: "सरल भाषा", kn: "ಸರಳ ಭಾಷೆ" },
-    description: {
-      en: "Plain words and examples",
-      hi: "सरल शब्द और उदाहरण",
-      kn: "ಸರಳ ಪದಗಳು ಮತ್ತು ಉದಾಹರಣೆಗಳು",
-    },
-  },
 };
 
 const NEED_ICONS = {
   vision: ALargeSmall,
   hearing: Volume2,
-  motor: MousePointerClick,
   cognitive: ListOrdered,
-  literacy: BookOpen,
 };
 
 export function AccessibilityNeedCards() {

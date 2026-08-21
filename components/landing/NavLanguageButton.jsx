@@ -5,7 +5,6 @@ import { LANGUAGES } from "@/lib/data/languages";
 
 const LANGUAGE_SHORT = {
   en: "En",
-  hi: "हिं",
   kn: "ಕ",
 };
 
