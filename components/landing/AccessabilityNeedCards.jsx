@@ -38,7 +38,7 @@ export function AccessibilityNeedCards() {
               type="button"
               onClick={() => setNeed(need.id)}
               aria-pressed={isActive}
-              className="ink-card ink-lift flex items-center gap-3 p-3.5 text-left transition-colors sm:p-4"
+              className="ink-card ink-lift flex items-center gap-2.5 p-3 text-left transition-colors sm:gap-3 sm:p-3.5"
               style={{
                 backgroundColor: isActive ? "var(--blue)" : "#ffffff",
                 color: isActive ? "#ffffff" : "var(--ink)",

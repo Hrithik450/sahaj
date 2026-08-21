@@ -203,8 +203,20 @@ html {
 .paper .nav-pill {
   background: var(--cream);
   border-bottom: var(--ink-border) solid var(--ink);
-  border-bottom-left-radius: 2rem;
-  border-bottom-right-radius: 2rem;
+  border-bottom-left-radius: 1.25rem;
+  border-bottom-right-radius: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .paper .nav-pill {
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+  }
+}
+
+.paper .nav-pill .display,
+.paper .footer-slab .display {
+  font-weight: 700;
 }
 
 .paper .ink-input {
@@ -245,6 +257,28 @@ html {
   border-top: var(--ink-border) solid var(--ink);
   border-top-left-radius: 2rem;
   border-top-right-radius: 2rem;
+}
+
+.paper .section-x {
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .paper .section-x {
+    padding-inline: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .paper .section-x {
+    padding-inline: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .paper .section-x {
+    padding-inline: 1.5rem;
+  }
 }
 
 .paper .footer-cta {

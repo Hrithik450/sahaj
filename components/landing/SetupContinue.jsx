@@ -15,7 +15,7 @@ export function SetupContinue() {
         type="button"
         onClick={completeSetup}
         disabled={!canContinue}
-        className="btn-ink flex w-full items-center justify-center gap-2 px-6 py-3.5 text-base text-white sm:py-4 sm:text-lg"
+        className="btn-ink flex w-full items-center justify-center gap-2 px-6 py-2.5 text-base text-white sm:py-3 sm:text-lg"
         style={{ backgroundColor: "var(--blue)" }}
       >
         Continue to {SITE.name}

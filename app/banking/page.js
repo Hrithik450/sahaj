@@ -14,8 +14,8 @@ export default function BankingPage() {
   return (
     <>
       <Nav />
-      <main className="px-6 pb-16">
-        <div className="mx-auto max-w-6xl pt-10">
+      <main className="section-x pb-16">
+        <div className="mx-auto max-w-6xl pt-14 sm:pt-14 md:pt-16 lg:pt-16">
           <p className="caption text-xs font-semibold uppercase tracking-widest">
             Banking
           </p>

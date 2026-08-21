@@ -7,7 +7,7 @@ function scrollToFeature(id) {
 export function FeatureNav({ features, ariaLabel = "Features" }) {
   return (
     <nav
-      className="flex flex-wrap justify-center gap-4 py-8 sm:gap-5"
+      className="flex flex-nowrap gap-4 overflow-x-auto scroll-smooth py-8 pb-4 sm:gap-5 lg:flex-wrap lg:overflow-visible lg:pb-8"
       aria-label={ariaLabel}
     >
       {features.map((feature) => (
@@ -15,13 +15,9 @@ export function FeatureNav({ features, ariaLabel = "Features" }) {
           key={feature.id}
           type="button"
           onClick={() => scrollToFeature(feature.id)}
-          className="sticker sticker-oval sticker-label ink-lift w-[9.5rem] shadow-[-1.5px_1.5px_0_0_var(--ink)] sm:w-[10.5rem]"
-          style={{ backgroundColor: feature.iconBg }}
+          className="sticker-label ink-lift shrink-0 rounded-[1.75rem] border border-[var(--ink)] bg-transparent px-5 py-3 text-left shadow-[-1.5px_1.5px_0_0_var(--ink)] sm:px-6"
         >
           <span className="block leading-tight">{feature.title}</span>
-          <span className="mt-1 block text-xs font-medium opacity-80">
-            {feature.navHint}
-          </span>
         </button>
       ))}
     </nav>

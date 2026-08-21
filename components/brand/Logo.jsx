@@ -16,6 +16,7 @@ export function Logo({
   size = "md",
   href = "/",
   showTagline = false,
+  taglineClassName = "",
   className = "",
 }) {
   const scale = SIZES[size];
@@ -27,7 +28,9 @@ export function Logo({
           {SITE.name}
         </span>
         {showTagline && (
-          <span className={`caption mt-0.5 ${scale.tagline} font-medium`}>
+          <span
+            className={`caption mt-0.5 ${scale.tagline} font-medium ${taglineClassName}`}
+          >
             {SITE.tagline}
           </span>
         )}

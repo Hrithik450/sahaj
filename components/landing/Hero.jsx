@@ -4,62 +4,39 @@ import { HeroIllustration } from "@/components/landing/HeroIllustration";
 
 export function Hero() {
   return (
-    <section id="home" className="px-6 py-10 sm:py-14 lg:py-16">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
-        {/* Headline and setup area */}
-        <div>
+    <section
+      id="home"
+      className="section-x overflow-hidden pt-14 pb-6 sm:pt-14 sm:pb-10 md:pt-16 md:pb-14 lg:py-16"
+    >
+      <div className="relative mx-auto flex max-w-6xl flex-col lg:block lg:min-h-[30rem]">
+        <div className="relative z-0 w-full lg:w-[60%]">
           <span
-            className="sticker mb-6 shadow-[-1.5px_1.5px_0_0_var(--ink)]"
+            className="sticker mb-3 rotate-2 shadow-[-1.5px_1.5px_0_0_var(--ink)] sm:mb-4"
             style={{ backgroundColor: "var(--sky)" }}
           >
             Welcome to {SITE.name}
           </span>
 
-          <h1 className="landing-strong max-w-[28rem] text-[clamp(2rem,4.5vw,2.75rem)] leading-[1.12] sm:max-w-[34rem] lg:max-w-[40rem]">
+          <h1 className="landing-strong max-w-[28rem] text-[clamp(2rem,4.5vw,2.75rem)] leading-[1.12] sm:max-w-[34rem] lg:max-w-none">
             <span className="block">Digital services,</span>
             <span className="block">
-              made for{" "}
-              <span className="underline-swash" style={{ color: "var(--blue)" }}>
-                you.
+              simple for{" "}
+              <span
+                className="underline-swash"
+                style={{ color: "var(--blue)" }}
+              >
+                everyone.
               </span>
             </span>
           </h1>
 
-          <p className="caption mt-5 max-w-lg text-base leading-relaxed sm:text-[1.05rem]">
-            {SITE.name} adapts the experience to your needs so you can access
-            government and banking services easily and confidently.
-          </p>
-
-          <div className="mt-8">
+          <div className="mt-5 max-w-full sm:mt-6 sm:max-w-[90%] lg:mt-8 lg:max-w-[80%]">
             <AccessabilitySetup />
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative -mx-4 mt-10 flex min-h-[min(34vh,14rem)] w-[calc(100%+2rem)] flex-1 items-end justify-start sm:mx-0 sm:w-full sm:-translate-x-2 sm:min-h-[min(40vh,18rem)] md:mt-12 md:-translate-x-3 md:min-h-[min(48vh,24rem)] lg:pointer-events-none lg:absolute lg:-right-8 lg:top-[50%] lg:z-20 lg:mx-0 lg:mt-0 lg:min-h-0 lg:w-[62%] lg:translate-x-0 lg:-translate-y-1/2 lg:items-center lg:justify-center">
           <HeroIllustration />
-
-          <div
-            className="ink-card absolute bottom-4 left-4 z-[2] max-w-[min(100%,16rem)] px-4 py-3.5 sm:bottom-6 sm:left-6 sm:max-w-xs sm:px-5 sm:py-4"
-          >
-            <p className="text-sm leading-snug sm:text-[0.95rem]">
-              <span className="font-bold" style={{ color: "var(--green)" }}>
-                ✓
-              </span>{" "}
-              {SITE.name} is here to make every digital experience{" "}
-              <span style={{ color: "var(--blue)" }} className="font-bold">
-                accessible
-              </span>
-              ,{" "}
-              <span style={{ color: "var(--blue)" }} className="font-bold">
-                understandable
-              </span>{" "}
-              and{" "}
-              <span style={{ color: "var(--blue)" }} className="font-bold">
-                dignified
-              </span>
-              .
-            </p>
-          </div>
         </div>
       </div>
     </section>

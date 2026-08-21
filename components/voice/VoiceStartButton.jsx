@@ -12,7 +12,8 @@ export function VoiceStartButton() {
       type="button"
       onClick={toggleVoice}
       aria-pressed={voiceEnabled}
-      className="btn-ink flex items-center gap-2 bg-white px-4 py-2 text-sm font-bold sm:px-5"
+      aria-label={voiceEnabled ? "Voice on" : "Start voice guidance"}
+      className="btn-ink flex h-9 w-9 items-center justify-center bg-white p-0 sm:h-auto sm:w-auto sm:gap-2 sm:px-5 sm:py-2 sm:text-sm sm:font-bold"
       style={{
         borderColor: "var(--blue)",
         backgroundColor: voiceEnabled ? "var(--blue)" : "#ffffff",
@@ -20,7 +21,9 @@ export function VoiceStartButton() {
       }}
     >
       <Volume2 className="h-4 w-4" strokeWidth={2.25} aria-hidden />
-      {voiceEnabled ? "Voice on" : "Start Voice"}
+      <span className="hidden sm:inline">
+        {voiceEnabled ? "Voice on" : "Start Voice"}
+      </span>
     </button>
   );
 }

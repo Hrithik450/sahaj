@@ -10,7 +10,7 @@ export default function LoginPage() {
   return (
     <>
       <Nav />
-      <main className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-6 py-16">
+      <main className="section-x mx-auto flex w-full max-w-lg flex-1 flex-col justify-center pt-20 pb-16 sm:pt-24 md:pt-28 lg:py-16">
         <LoginCard />
       </main>
       <Footer />

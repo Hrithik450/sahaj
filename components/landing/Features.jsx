@@ -32,7 +32,7 @@ function FeatureCard({ feature, index, domainHref }) {
     <div className="relative p-4" data-feature-card>
       <div
         aria-hidden
-        className="absolute inset-4 rounded-[1.75rem] border border-[var(--ink)]"
+        className="absolute inset-5 rounded-[1.75rem] border border-[var(--ink)]"
         style={{
           backgroundColor: feature.accent,
           transform: `rotate(${feature.layerA.rotate}deg) translate(${feature.layerA.tx}px, ${feature.layerA.ty}px)`,
@@ -43,10 +43,10 @@ function FeatureCard({ feature, index, domainHref }) {
         aria-hidden
         className="absolute rounded-[1.75rem] border border-[var(--ink)]"
         style={{
-          top: 24,
-          bottom: 24,
-          left: 16,
-          right: 16,
+          top: 28,
+          bottom: 28,
+          left: 20,
+          right: 20,
           backgroundColor: feature.accent,
           transform: `rotate(${feature.layerB.rotate}deg) translate(${feature.layerB.tx}px, ${feature.layerB.ty}px)`,
           zIndex: 1,
@@ -107,7 +107,7 @@ export function Features() {
   }
 
   return (
-    <section id="features" className="px-6 pt-14 pb-16 sm:pt-16 sm:pb-24 lg:pt-20 lg:pb-32">
+    <section id="features" className="section-x pt-14 pb-16 sm:pt-16 sm:pb-24 lg:pt-20 lg:pb-32">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 flex flex-col gap-6 sm:mb-14 sm:flex-row sm:items-end sm:justify-between lg:mb-16">
           <div>

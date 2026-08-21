@@ -27,9 +27,6 @@ export function LiveCaption() {
         className="ink-card rounded-xl px-4 py-3 text-sm leading-relaxed sm:text-[0.95rem]"
         style={{ backgroundColor: "var(--cream)" }}
       >
-        <p className="caption mb-1 text-[0.65rem] font-bold uppercase tracking-widest">
-          Now speaking
-        </p>
         <p>{text}</p>
       </div>
     </div>
