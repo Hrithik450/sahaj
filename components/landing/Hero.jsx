@@ -1,5 +1,6 @@
 import { SITE } from "@/lib/site";
 import { AccessibilityNeedCards } from "@/components/landing/AccessabilityNeedCards";
+import { LanguagePicker } from "@/components/landing/LanguagePicker";
 
 export function Hero() {
   return (
@@ -28,6 +29,7 @@ export function Hero() {
 
           <div className="mt-8">
             <AccessibilityNeedCards />
+            <LanguagePicker />
           </div>
         </div>
 
