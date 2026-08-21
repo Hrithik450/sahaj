@@ -16,6 +16,7 @@ export function Logo({
   size = "md",
   href = "/",
   showTagline = false,
+  tagline = SITE.tagline,
   taglineClassName = "",
   className = "",
 }) {
@@ -31,7 +32,7 @@ export function Logo({
           <span
             className={`caption mt-0.5 ${scale.tagline} font-medium ${taglineClassName}`}
           >
-            {SITE.tagline}
+            {tagline}
           </span>
         )}
       </span>

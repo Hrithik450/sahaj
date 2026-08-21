@@ -1,8 +1,52 @@
-import { SITE } from "@/lib/site";
+"use client";
+
+import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { AccessabilitySetup } from "@/components/landing/AccessabilitySetup";
 import { HeroIllustration } from "@/components/landing/HeroIllustration";
+import { pickLang } from "@/lib/i18n";
+import { SITE } from "@/lib/site";
+
+const HOME = {
+  welcome: {
+    en: "Welcome to",
+    hi: "में आपका स्वागत है",
+    kn: "ಗೆ ಸುಸ್ವಾಗತ",
+  },
+  headlineLine1: {
+    en: "Digital services,",
+    hi: "डिजिटल सेवाएं,",
+    kn: "ಡಿಜಿಟಲ್ ಸೇವೆಗಳು,",
+  },
+  headlineLine2Prefix: {
+    en: "simple for",
+    hi: "सभी के लिए",
+    kn: "ಎಲ್ಲರಿಗೂ",
+  },
+  headlineHighlight: {
+    en: "everyone.",
+    hi: "आसान।",
+    kn: "ಸರಳ.",
+  },
+};
+
+function welcomeText(language) {
+  const welcome = pickLang(HOME.welcome, language);
+
+  if (language === "en") {
+    return `${welcome} ${SITE.name}`;
+  }
+
+  if (language === "kn") {
+    return `${SITE.name}${welcome}`;
+  }
+
+  return `${SITE.name} ${welcome}`;
+}
 
 export function Hero() {
+  const { prefs } = useAccessability();
+  const language = prefs.language;
+
   return (
     <section
       id="home"
@@ -14,18 +58,20 @@ export function Hero() {
             className="sticker mb-3 rotate-2 shadow-[-1.5px_1.5px_0_0_var(--ink)] sm:mb-4"
             style={{ backgroundColor: "var(--sky)" }}
           >
-            Welcome to {SITE.name}
+            {welcomeText(language)}
           </span>
 
           <h1 className="landing-strong max-w-[28rem] text-[clamp(2rem,4.5vw,2.75rem)] leading-[1.12] sm:max-w-[34rem] lg:max-w-none">
-            <span className="block">Digital services,</span>
             <span className="block">
-              simple for{" "}
+              {pickLang(HOME.headlineLine1, language)}
+            </span>
+            <span className="block">
+              {pickLang(HOME.headlineLine2Prefix, language)}{" "}
               <span
                 className="underline-swash"
                 style={{ color: "var(--blue)" }}
               >
-                everyone.
+                {pickLang(HOME.headlineHighlight, language)}
               </span>
             </span>
           </h1>

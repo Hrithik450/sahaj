@@ -3,9 +3,19 @@
 import { Globe } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { LANGUAGES } from "@/lib/data/languages";
+import { pickLang } from "@/lib/i18n";
+
+const LANGUAGE_PICKER = {
+  label: {
+    en: "Choose your language",
+    hi: "अपनी भाषा चुनें",
+    kn: "ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  },
+};
 
 export function LanguagePicker() {
   const { prefs, setLanguage } = useAccessability();
+  const language = prefs.language;
 
   return (
     <div className="mt-6">
@@ -20,7 +30,7 @@ export function LanguagePicker() {
         />
 
         <span className="caption flex-1 text-sm sm:text-[0.95rem]">
-          Choose your language
+          {pickLang(LANGUAGE_PICKER.label, language)}
         </span>
 
         <select

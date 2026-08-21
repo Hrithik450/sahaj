@@ -3,45 +3,59 @@
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { LogIn, LogOut } from "lucide-react";
+import { useAccessability } from "@/components/accessability/AccessabilityProvider";
+import { pickLang } from "@/lib/i18n";
+
+const NAV_AUTH = {
+  signIn: { en: "Sign in", hi: "साइन इन", kn: "ಸೈನ್ ಇನ್" },
+  signOut: { en: "Sign out", hi: "साइन आउट", kn: "ಸೈನ್ ಔಟ್" },
+};
+
+const NAV_AUTH_BTN_CLASS =
+  "btn-ink flex h-9 w-9 items-center justify-center bg-white p-0 lg:h-auto lg:w-auto lg:px-4 lg:py-2 lg:text-sm lg:font-bold";
 
 export function NavAuth() {
   const { data: session, status } = useSession();
+  const { prefs } = useAccessability();
+  const language = prefs.language;
 
   if (status === "loading") {
     return (
-      <span className="caption flex h-9 w-9 items-center justify-center text-xs font-semibold text-[var(--muted)] sm:h-auto sm:w-auto">
+      <span
+        className={`${NAV_AUTH_BTN_CLASS} text-xs font-semibold text-[var(--muted)]`}
+        aria-hidden
+      >
         …
       </span>
     );
   }
 
-  if (session?.user) {
+  if (status === "authenticated" && session?.user) {
     return (
-      <div className="flex items-center gap-2 sm:gap-3">
-        <span className="caption hidden max-w-[8rem] truncate text-xs font-semibold sm:inline">
-          {session.user.name || session.user.email}
+      <button
+        type="button"
+        onClick={() => signOut({ callbackUrl: "/" })}
+        aria-label={pickLang(NAV_AUTH.signOut, language)}
+        className={NAV_AUTH_BTN_CLASS}
+      >
+        <LogOut
+          className="h-4 w-4 lg:hidden"
+          strokeWidth={2.25}
+          aria-hidden
+        />
+        <span className="hidden lg:inline">
+          {pickLang(NAV_AUTH.signOut, language)}
         </span>
-        <button
-          type="button"
-          onClick={() => signOut({ callbackUrl: "/" })}
-          aria-label="Sign out"
-          className="btn-ink flex h-9 w-9 items-center justify-center bg-white p-0 sm:h-auto sm:w-auto sm:px-3 sm:py-1.5 sm:text-sm"
-        >
-          <LogOut className="h-4 w-4 sm:hidden" strokeWidth={2.25} aria-hidden />
-          <span className="hidden text-xs sm:inline">Sign out</span>
-        </button>
-      </div>
+      </button>
     );
   }
 
   return (
-    <Link
-      href="/login"
-      aria-label="Sign in"
-      className="btn-ink flex h-9 w-9 items-center justify-center bg-white p-0 sm:h-auto sm:w-auto sm:px-3 sm:py-1.5 sm:text-sm"
-    >
-      <LogIn className="h-4 w-4 sm:hidden" strokeWidth={2.25} aria-hidden />
-      <span className="hidden text-xs sm:inline">Sign in</span>
+    <Link href="/login" className={NAV_AUTH_BTN_CLASS}>
+      <LogIn className="h-4 w-4 lg:hidden" strokeWidth={2.25} aria-hidden />
+      <span className="hidden lg:inline">
+        {pickLang(NAV_AUTH.signIn, language)}
+      </span>
     </Link>
   );
 }
