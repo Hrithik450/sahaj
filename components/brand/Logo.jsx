@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Mark } from "./Mark";
 import { SITE } from "@/lib/site";
 
 const SIZES = {
@@ -23,7 +22,6 @@ export function Logo({
 
   const inner = (
     <>
-      <Mark size={scale.mark} />
       <span className="flex flex-col leading-none">
         <span className={`display translate-y-[0.04em] ${scale.text}`}>
           {SITE.name}
