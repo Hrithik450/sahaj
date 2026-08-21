@@ -17,8 +17,48 @@ const EXAMPLE_QUERIES = [
   "scholarship income proof",
 ];
 
+const FINDER = {
+  noMatchVoice: {
+    en: "No matching service found. Try income certificate or birth certificate.",
+    hi: "कोई सेवा नहीं मिली। income certificate या birth certificate आज़माएं।",
+    kn: "ಯಾವುದೇ ಸೇವೆ ಸಿಗಲಿಲ್ಲ. income certificate ಅಥವಾ birth certificate ಪ್ರಯತ್ನಿಸಿ.",
+  },
+  queryLabel: {
+    en: "What government service do you need?",
+    hi: "आपको कौन सी सरकारी सेवा चाहिए?",
+    kn: "ನಿಮಗೆ ಯಾವ ಸರ್ಕಾರಿ ಸೇವೆ ಬೇಕು?",
+  },
+  queryPlaceholder: {
+    en: "Example: income certificate for scholarship",
+    hi: "उदाहरण: scholarship के लिए income certificate",
+    kn: "ಉದಾಹರಣೆ: scholarship ಗಾಗಿ income certificate",
+  },
+  findService: {
+    en: "Find service",
+    hi: "सेवा खोजें",
+    kn: "ಸೇವೆ ಹುಡುಕಿ",
+  },
+  noResults: {
+    en: "No match yet. Try words like income, birth, ration, property tax, or caste certificate.",
+    hi: "अभी कोई मिलान नहीं। income, birth, ration, property tax या caste certificate शब्द आज़माएं।",
+    kn: "ಇನ್ನೂ ಹೊಂದಾಣಿಕೆ ಇಲ್ಲ. income, birth, ration, property tax ಅಥವಾ caste certificate ಪದಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
+  },
+  nextPrefix: { en: "Next: ", hi: "अगला: ", kn: "ಮುಂದೆ: " },
+  openForm: {
+    en: "Open guided form",
+    hi: "मार्गदर्शित फॉर्म खोलें",
+    kn: "ಮಾರ್ಗದರ್ಶಿತ ಫಾರ್ಮ್ ತೆರೆಯಿರಿ",
+  },
+  simplifyNotice: {
+    en: "Simplify a notice",
+    hi: "नोटिस सरल करें",
+    kn: "ಸೂಚನೆ ಸರಳಗೊಳಿಸಿ",
+  },
+};
+
 export function ServiceFinder() {
   const { prefs } = useAccessability();
+  const language = prefs.language;
   const [query, setQuery] = useState("");
   const [searched, setSearched] = useState(false);
 
@@ -35,7 +75,7 @@ export function ServiceFinder() {
     if (!prefs.voiceEnabled) return;
 
     if (matches.length === 0) {
-      speak("No matching service found. Try income certificate or birth certificate.", {
+      speak(pickLang(FINDER.noMatchVoice, language), {
         language: prefs.language,
       });
       return;
@@ -52,7 +92,7 @@ export function ServiceFinder() {
     <div className="grid gap-5">
       <label className="grid gap-2">
         <span className="caption text-sm font-semibold">
-          What government service do you need?
+          {pickLang(FINDER.queryLabel, language)}
         </span>
         <div className="relative">
           <Search
@@ -66,7 +106,7 @@ export function ServiceFinder() {
               if (event.key === "Enter") runSearch();
             }}
             className="ink-input pl-10"
-            placeholder="Example: income certificate for scholarship"
+            placeholder={pickLang(FINDER.queryPlaceholder, language)}
           />
         </div>
       </label>
@@ -90,13 +130,12 @@ export function ServiceFinder() {
         className="btn-ink self-start px-6 py-2.5 text-sm text-white"
         style={{ backgroundColor: "var(--blue)" }}
       >
-        Find service
+        {pickLang(FINDER.findService, language)}
       </button>
 
       {searched && results.length === 0 && (
         <p className="text-sm leading-relaxed text-[var(--muted)]">
-          No match yet. Try words like income, birth, ration, property tax, or
-          caste certificate.
+          {pickLang(FINDER.noResults, language)}
         </p>
       )}
 
@@ -108,27 +147,29 @@ export function ServiceFinder() {
               className="rounded-xl border border-[var(--ink)] bg-white p-4 sm:p-5"
             >
               <h3 className="landing-strong text-lg">
-                {pickLang(service.title, prefs.language)}
+                {pickLang(service.title, language)}
               </h3>
               <p className="caption mt-2 text-sm leading-relaxed">
-                {pickLang(service.summary, prefs.language)}
+                {pickLang(service.summary, language)}
               </p>
               <p className="mt-3 text-sm leading-relaxed">
-                <span className="font-bold">Next: </span>
-                {pickLang(service.nextStep, prefs.language)}
+                <span className="font-bold">
+                  {pickLang(FINDER.nextPrefix, language)}
+                </span>
+                {pickLang(service.nextStep, language)}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Link
                   href="#form"
                   className="btn-ink bg-white px-4 py-2 text-xs sm:text-sm"
                 >
-                  Open guided form
+                  {pickLang(FINDER.openForm, language)}
                 </Link>
                 <Link
                   href="#simplify"
                   className="btn-ink bg-white px-4 py-2 text-xs sm:text-sm"
                 >
-                  Simplify a notice
+                  {pickLang(FINDER.simplifyNotice, language)}
                 </Link>
               </div>
             </article>

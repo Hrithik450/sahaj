@@ -7,8 +7,67 @@ import { BANK_TRANSACTIONS } from "@/lib/data/bank/transactions";
 import { pickLang } from "@/lib/i18n";
 import { speak } from "@/lib/voice";
 
+const EXPLAINER = {
+  emptyError: {
+    en: "Paste an SMS alert or choose a sample transaction.",
+    hi: "SMS अलर्ट चिपकाएं या नमूना लेनदेन चुनें।",
+    kn: "SMS ಎಚ್ಚರಿಕೆ ಅಂಟಿಸಿ ಅಥವಾ ಮಾದರಿ ವಹಿವಾಟು ಆಯ್ಕೆಮಾಡಿ.",
+  },
+  requestFailed: {
+    en: "Explain request failed.",
+    hi: "व्याख्या अनुरोध विफल।",
+    kn: "ವಿವರಣೆ ವಿನಂತಿ ವಿಫಲವಾಗಿದೆ.",
+  },
+  genericError: {
+    en: "Something went wrong.",
+    hi: "कुछ गलत हो गया।",
+    kn: "ಏನೋ ತಪ್ಪಾಗಿದೆ.",
+  },
+  sampleHeading: {
+    en: "Try a sample alert",
+    hi: "नमूना अलर्ट आज़माएं",
+    kn: "ಮಾದರಿ ಎಚ್ಚರಿಕೆ ಪ್ರಯತ್ನಿಸಿ",
+  },
+  pasteLabel: {
+    en: "Paste bank SMS or transaction text",
+    hi: "बैंक SMS या लेनदेन पाठ चिपकाएं",
+    kn: "ಬ್ಯಾಂಕ್ SMS ಅಥವಾ ವಹಿವಾಟು ಪಠ್ಯ ಅಂಟಿಸಿ",
+  },
+  pastePlaceholder: {
+    en: "Rs 250.00 debited from A/c **9033...",
+    hi: "Rs 250.00 debited from A/c **9033...",
+    kn: "Rs 250.00 debited from A/c **9033...",
+  },
+  submit: {
+    en: "Explain transaction",
+    hi: "लेनदेन समझाएं",
+    kn: "ವಹಿವಾಟು ವಿವರಿಸಿ",
+  },
+  whatHappened: {
+    en: "What happened",
+    hi: "क्या हुआ",
+    kn: "ಏನಾಯಿತು",
+  },
+  whatToCheck: {
+    en: "What to check",
+    hi: "क्या जांचें",
+    kn: "ಏನನ್ನು ಪರಿಶೀಲಿಸಬೇಕು",
+  },
+  suspicious: {
+    en: "This may be suspicious. Contact your bank fraud helpline if you did not authorize it.",
+    hi: "यह संदिग्ध हो सकता है। अगर आपने अनुमति नहीं दी, तो bank fraud helpline पर संपर्क करें।",
+    kn: "ಇದು ಸಂಶಯಾಸ್ಪದವಾಗಿರಬಹುದು. ನೀವು ಅನುಮತಿಸದಿದ್ದರೆ ಬ್ಯಾಂಕ್ ವಂಚನೆ ಹೆಲ್ಪ್‌ಲೈನ್‌ಗೆ ಸಂಪರ್ಕಿಸಿ.",
+  },
+  offlineNote: {
+    en: "Showing offline demo explanation.",
+    hi: "ऑफ़लाइन डेमो व्याख्या दिखाई जा रही है।",
+    kn: "ಆಫ್‌ಲೈನ್ ಡೆಮೊ ವಿವರಣೆ ತೋರಿಸಲಾಗುತ್ತಿದೆ.",
+  },
+};
+
 export function TransactionExplainer() {
   const { prefs } = useAccessability();
+  const language = prefs.language;
   const [text, setText] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,7 +75,7 @@ export function TransactionExplainer() {
 
   async function runExplain(inputText = text) {
     if (!inputText.trim()) {
-      setError("Paste an SMS alert or choose a sample transaction.");
+      setError(pickLang(EXPLAINER.emptyError, language));
       return;
     }
 
@@ -36,7 +95,7 @@ export function TransactionExplainer() {
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || "Explain request failed.");
+        throw new Error(data.error || pickLang(EXPLAINER.requestFailed, language));
       }
 
       setResult(data);
@@ -45,7 +104,7 @@ export function TransactionExplainer() {
         speak(data.summary, { language: prefs.language });
       }
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      setError(err.message || pickLang(EXPLAINER.genericError, language));
       setResult(null);
     } finally {
       setLoading(false);
@@ -61,7 +120,9 @@ export function TransactionExplainer() {
   return (
     <div className="grid gap-6">
       <div>
-        <p className="caption mb-3 text-sm font-semibold">Try a sample alert</p>
+        <p className="caption mb-3 text-sm font-semibold">
+          {pickLang(EXPLAINER.sampleHeading, language)}
+        </p>
         <div className="flex flex-wrap gap-2">
           {BANK_TRANSACTIONS.map((sample) => (
             <button
@@ -70,7 +131,7 @@ export function TransactionExplainer() {
               onClick={() => loadSample(sample)}
               className="btn-ink bg-white px-3 py-1.5 text-xs sm:text-sm"
             >
-              {pickLang(sample.title, prefs.language)}
+              {pickLang(sample.title, language)}
             </button>
           ))}
         </div>
@@ -78,14 +139,14 @@ export function TransactionExplainer() {
 
       <label className="grid gap-2">
         <span className="caption text-sm font-semibold">
-          Paste bank SMS or transaction text
+          {pickLang(EXPLAINER.pasteLabel, language)}
         </span>
         <textarea
           value={text}
           onChange={(event) => setText(event.target.value)}
           rows={5}
           className="ink-input min-h-[7rem] resize-y font-mono text-sm"
-          placeholder="Rs 250.00 debited from A/c **9033..."
+          placeholder={pickLang(EXPLAINER.pastePlaceholder, language)}
         />
       </label>
 
@@ -97,7 +158,7 @@ export function TransactionExplainer() {
         style={{ backgroundColor: "var(--blue)" }}
       >
         {loading && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
-        Explain transaction
+        {pickLang(EXPLAINER.submit, language)}
       </button>
 
       {error && (
@@ -110,7 +171,7 @@ export function TransactionExplainer() {
         <div className="grid gap-4 rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-4 sm:p-5">
           <div>
             <p className="caption text-xs font-bold uppercase tracking-widest">
-              What happened
+              {pickLang(EXPLAINER.whatHappened, language)}
             </p>
             <p className="mt-2 text-sm leading-relaxed sm:text-base">
               {result.summary}
@@ -120,7 +181,7 @@ export function TransactionExplainer() {
           {result.checks?.length > 0 && (
             <div>
               <p className="caption text-xs font-bold uppercase tracking-widest">
-                What to check
+                {pickLang(EXPLAINER.whatToCheck, language)}
               </p>
               <ul className="mt-2 grid gap-2 text-sm leading-relaxed">
                 {result.checks.map((check) => (
@@ -140,13 +201,14 @@ export function TransactionExplainer() {
               className="rounded-lg border border-[var(--ink)] px-3 py-2 text-sm font-semibold"
               style={{ backgroundColor: "var(--yellow)" }}
             >
-              This may be suspicious. Contact your bank fraud helpline if you
-              did not authorize it.
+              {pickLang(EXPLAINER.suspicious, language)}
             </p>
           )}
 
           {result.source === "fallback" && (
-            <p className="caption text-xs">Showing offline demo explanation.</p>
+            <p className="caption text-xs">
+              {pickLang(EXPLAINER.offlineNote, language)}
+            </p>
           )}
         </div>
       )}

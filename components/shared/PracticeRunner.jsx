@@ -19,6 +19,69 @@ const FRAUD_DISTRACTORS = [
   },
 ];
 
+const PRACTICE = {
+  completeTitle: {
+    en: "Great practice run",
+    hi: "बढ़िया अभ्यास",
+    kn: "ಉತ್ತಮ ಅಭ್ಯಾಸ",
+  },
+  completeBody: {
+    en: "You spotted the right answers safely. Nothing was submitted to any real government or bank system.",
+    hi: "आपने सही जवाब सुरक्षित रूप से चुने। किसी वास्तविक सरकारी या बैंक सिस्टम में कुछ नहीं भेजा गया।",
+    kn: "ನೀವು ಸರಿಯಾದ ಉತ್ತರಗಳನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಗುರುತಿಸಿದ್ದೀರಿ. ಯಾವುದೇ ನಿಜ ಸರ್ಕಾರಿ ಅಥವಾ ಬ್ಯಾಂಕ್ ವ್ಯವಸ್ಥೆಗೆ ಏನೂ ಕಳುಹಿಸಲಾಗಿಲ್ಲ.",
+  },
+  tryAnother: {
+    en: "Try another scenario",
+    hi: "दूसरा परिदृश्य आज़माएं",
+    kn: "ಮತ್ತೊಂದು ಸценарಿ ಪ್ರಯತ್ನಿಸಿ",
+  },
+  stepCompleteVoice: {
+    en: "Nice work. You completed the practice safely.",
+    hi: "अच्छा काम। आपने अभ्यास सुरक्षित रूप से पूरा किया।",
+    kn: "ಚೆನ್ನಾಗಿದೆ. ನೀವು ಅಭ್ಯಾಸವನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ.",
+  },
+  finishPractice: {
+    en: "Finish practice",
+    hi: "अभ्यास समाप्त करें",
+    kn: "ಅಭ್ಯಾಸ ಮುಗಿಸಿ",
+  },
+  checkAnswer: {
+    en: "Check answer",
+    hi: "जवाब जांचें",
+    kn: "ಉತ್ತರ ಪರಿಶೀಲಿಸಿ",
+  },
+  correctServiceVoice: {
+    en: "Correct service choice.",
+    hi: "सही सेवा चुनी।",
+    kn: "ಸರಿಯಾದ ಸೇವೆ ಆಯ್ಕೆ.",
+  },
+  goodCatchVoice: {
+    en: "Good catch. Reporting quickly is the right step.",
+    hi: "अच्छी पकड़। जल्दी रिपोर्ट करना सही कदम है।",
+    kn: "ಒಳ್ಳೆಯ ಪತ್ತೆ. ಬೇಗ ವರದಿ ಮಾಡುವುದು ಸರಿಯಾದ ಹಂತ.",
+  },
+  chooseScenario: {
+    en: "Choose a scenario",
+    hi: "परिदृश्य चुनें",
+    kn: "ಪರಿದೃಶ್ಯ ಆಯ್ಕೆಮಾಡಿ",
+  },
+  safeBanner: {
+    en: "Safe practice only. Mistakes here help you learn — nothing is sent to a real office or bank.",
+    hi: "केवल सुरक्षित अभ्यास। यहां गलतियां सीखने में मदद करती हैं — किसी वास्तविक कार्यालय या बैंक को कुछ नहीं भेजा जाता।",
+    kn: "ಸುರಕ್ಷಿತ ಅಭ್ಯಾಸ ಮಾತ್ರ. ಇಲ್ಲಿನ ತಪ್ಪುಗಳು ಕಲಿಯಲು ಸಹಾಯ ಮಾಡುತ್ತವೆ — ಯಾವುದೇ ನಿಜ ಕಚೇರಿ ಅಥವಾ ಬ್ಯಾಂಕ್‌ಗೆ ಏನೂ ಕಳುಹಿಸಲಾಗುವುದಿಲ್ಲ.",
+  },
+  stepOf: {
+    en: (current, total) => `Step ${current} of ${total}`,
+    hi: (current, total) => `चरण ${current} / ${total}`,
+    kn: (current, total) => `ಹಂತ ${current} / ${total}`,
+  },
+};
+
+function stepLabel(language, current, total) {
+  const fn = PRACTICE.stepOf[language] || PRACTICE.stepOf.en;
+  return fn(current, total);
+}
+
 function normalizeValue(value) {
   return String(value ?? "")
     .trim()
@@ -39,22 +102,21 @@ function getServiceChoices(correctServiceId) {
   return correct ? [correct, ...distractors] : GOV_SERVICES.slice(0, 3);
 }
 
-function PracticeComplete({ onRetry }) {
+function PracticeComplete({ onRetry, language }) {
   return (
     <div className="rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-5">
       <p className="landing-strong text-lg" style={{ color: "var(--green)" }}>
-        Great practice run
+        {pickLang(PRACTICE.completeTitle, language)}
       </p>
       <p className="caption mt-2 text-sm leading-relaxed">
-        You spotted the right answers safely. Nothing was submitted to any real
-        government or bank system.
+        {pickLang(PRACTICE.completeBody, language)}
       </p>
       <button
         type="button"
         onClick={onRetry}
         className="btn-ink mt-4 bg-white px-5 py-2 text-sm"
       >
-        Try another scenario
+        {pickLang(PRACTICE.tryAnother, language)}
       </button>
     </div>
   );
@@ -99,7 +161,7 @@ function StepPractice({ scenario, prefs, onComplete }) {
     if (stepIndex >= totalSteps - 1) {
       onComplete();
       if (prefs.voiceEnabled) {
-        speak("Nice work. You completed the practice safely.", {
+        speak(pickLang(PRACTICE.stepCompleteVoice, prefs.language), {
           language: prefs.language,
         });
       }
@@ -122,7 +184,7 @@ function StepPractice({ scenario, prefs, onComplete }) {
   return (
     <div className="grid gap-4">
       <p className="mono text-xs font-bold uppercase tracking-widest opacity-80">
-        Step {stepIndex + 1} of {totalSteps}
+        {stepLabel(prefs.language, stepIndex + 1, totalSteps)}
       </p>
 
       <label htmlFor={`practice-${currentStep.id}`} className="landing-strong text-lg">
@@ -147,7 +209,9 @@ function StepPractice({ scenario, prefs, onComplete }) {
         className="btn-ink self-start px-6 py-2.5 text-sm text-white"
         style={{ backgroundColor: "var(--blue)" }}
       >
-        {stepIndex >= totalSteps - 1 ? "Finish practice" : "Check answer"}
+        {stepIndex >= totalSteps - 1
+          ? pickLang(PRACTICE.finishPractice, prefs.language)
+          : pickLang(PRACTICE.checkAnswer, prefs.language)}
       </button>
     </div>
   );
@@ -165,7 +229,9 @@ function ServicePractice({ scenario, prefs, onComplete }) {
       setMistake(null);
       onComplete();
       if (prefs.voiceEnabled) {
-        speak("Correct service choice.", { language: prefs.language });
+        speak(pickLang(PRACTICE.correctServiceVoice, prefs.language), {
+          language: prefs.language,
+        });
       }
       return;
     }
@@ -216,7 +282,7 @@ function ActionPractice({ scenario, prefs, onComplete }) {
       setMistake(null);
       onComplete();
       if (prefs.voiceEnabled) {
-        speak("Good catch. Reporting quickly is the right step.", {
+        speak(pickLang(PRACTICE.goodCatchVoice, prefs.language), {
           language: prefs.language,
         });
       }
@@ -275,6 +341,7 @@ export function PracticeRunner({ scenarios }) {
   if (completed) {
     return (
       <PracticeComplete
+        language={prefs.language}
         onRetry={() => {
           setCompleted(false);
         }}
@@ -286,7 +353,9 @@ export function PracticeRunner({ scenarios }) {
     <div className="grid gap-5">
       {scenarios.length > 1 && (
         <label className="grid gap-2">
-          <span className="caption text-sm font-semibold">Choose a scenario</span>
+          <span className="caption text-sm font-semibold">
+            {pickLang(PRACTICE.chooseScenario, prefs.language)}
+          </span>
           <select
             value={scenario.id}
             onChange={(event) => resetScenario(event.target.value)}
@@ -302,8 +371,7 @@ export function PracticeRunner({ scenarios }) {
       )}
 
       <p className="caption rounded-lg border border-dashed border-[var(--ink)] bg-white px-3 py-2 text-xs leading-relaxed">
-        Safe practice only. Mistakes here help you learn — nothing is sent to a
-        real office or bank.
+        {pickLang(PRACTICE.safeBanner, prefs.language)}
       </p>
 
       {scenario.steps ? (

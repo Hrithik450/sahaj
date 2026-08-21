@@ -23,6 +23,7 @@ export function NavLanguageButton() {
 
   return (
     <button
+      id="nav-language-btn"
       type="button"
       onClick={cycleLanguage}
       aria-label={`Language: ${current.label}. Click to change.`}

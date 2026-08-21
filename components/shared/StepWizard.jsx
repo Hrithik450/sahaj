@@ -5,8 +5,46 @@ import { useAccessability } from "@/components/accessability/AccessabilityProvid
 import { pickLang } from "@/lib/i18n";
 import { speak } from "@/lib/voice";
 
+const WIZARD = {
+  completeVoice: {
+    en: "Great work. Your practice form is complete.",
+    hi: "बहुत अच्छा। आपका अभ्यास फॉर्म पूरा हो गया।",
+    kn: "ಚೆನ್ನಾಗಿದೆ. ನಿಮ್ಮ ಅಭ್ಯಾಸ ಫಾರ್ಮ್ ಪೂರ್ಣಗೊಂಡಿದೆ.",
+  },
+  allDone: {
+    en: "All steps completed",
+    hi: "सभी चरण पूरे",
+    kn: "ಎಲ್ಲ ಹಂತಗಳು ಪೂರ್ಣ",
+  },
+  safeNote: {
+    en: "This is a safe practice run. Nothing was submitted to any government or bank system.",
+    hi: "यह सुरक्षित अभ्यास है। किसी सरकारी या बैंक सिस्टम में कुछ नहीं भेजा गया।",
+    kn: "ಇದು ಸುರಕ್ಷಿತ ಅಭ್ಯಾಸ. ಯಾವುದೇ ಸರ್ಕಾರಿ ಅಥವಾ ಬ್ಯಾಂಕ್ ವ್ಯವಸ್ಥೆಗೆ ಏನೂ ಕಳುಹಿಸಲಾಗಿಲ್ಲ.",
+  },
+  tryAgain: { en: "Try again", hi: "फिर कोशिश करें", kn: "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ" },
+  chooseWorkflow: {
+    en: "Choose a workflow",
+    hi: "कार्यप्रवाह चुनें",
+    kn: "ಕೆಲಸದ ಹರಿವು ಆಯ್ಕೆಮಾಡಿ",
+  },
+  stepOf: {
+    en: (current, total) => `Step ${current} of ${total}`,
+    hi: (current, total) => `चरण ${current} / ${total}`,
+    kn: (current, total) => `ಹಂತ ${current} / ${total}`,
+  },
+  back: { en: "Back", hi: "पीछे", kn: "ಹಿಂದೆ" },
+  finish: { en: "Finish", hi: "समाप्त", kn: "ಮುಗಿಸಿ" },
+  nextStep: { en: "Next step", hi: "अगला चरण", kn: "ಮುಂದಿನ ಹಂತ" },
+};
+
+function stepLabel(language, current, total) {
+  const fn = WIZARD.stepOf[language] || WIZARD.stepOf.en;
+  return fn(current, total);
+}
+
 export function StepWizard({ templates }) {
   const { prefs } = useAccessability();
+  const language = prefs.language;
   const [templateId, setTemplateId] = useState(templates[0]?.id || "");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -23,7 +61,7 @@ export function StepWizard({ templates }) {
 
   function announceStep(step) {
     if (!prefs.voiceEnabled || !step) return;
-    const line = `${pickLang(step.label, prefs.language)}. ${pickLang(step.help, prefs.language)}`;
+    const line = `${pickLang(step.label, language)}. ${pickLang(step.help, language)}`;
     speak(line, { language: prefs.language });
   }
 
@@ -48,7 +86,7 @@ export function StepWizard({ templates }) {
     if (stepIndex >= totalSteps - 1) {
       setCompleted(true);
       if (prefs.voiceEnabled) {
-        speak("Great work. Your practice form is complete.", {
+        speak(pickLang(WIZARD.completeVoice, language), {
           language: prefs.language,
         });
       }
@@ -73,11 +111,10 @@ export function StepWizard({ templates }) {
     return (
       <div className="rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-5">
         <p className="landing-strong text-lg" style={{ color: "var(--green)" }}>
-          All steps completed
+          {pickLang(WIZARD.allDone, language)}
         </p>
         <p className="caption mt-2 text-sm leading-relaxed">
-          This is a safe practice run. Nothing was submitted to any government
-          or bank system.
+          {pickLang(WIZARD.safeNote, language)}
         </p>
         <button
           type="button"
@@ -88,7 +125,7 @@ export function StepWizard({ templates }) {
           }}
           className="btn-ink mt-4 bg-white px-5 py-2 text-sm"
         >
-          Try again
+          {pickLang(WIZARD.tryAgain, language)}
         </button>
       </div>
     );
@@ -98,7 +135,9 @@ export function StepWizard({ templates }) {
     <div className="grid gap-5">
       {templates.length > 1 && (
         <label className="grid gap-2">
-          <span className="caption text-sm font-semibold">Choose a workflow</span>
+          <span className="caption text-sm font-semibold">
+            {pickLang(WIZARD.chooseWorkflow, language)}
+          </span>
           <select
             value={template.id}
             onChange={(event) => handleTemplateChange(event.target.value)}
@@ -106,7 +145,7 @@ export function StepWizard({ templates }) {
           >
             {templates.map((item) => (
               <option key={item.id} value={item.id}>
-                {pickLang(item.title, prefs.language)}
+                {pickLang(item.title, language)}
               </option>
             ))}
           </select>
@@ -114,16 +153,16 @@ export function StepWizard({ templates }) {
       )}
 
       <p className="mono text-xs font-bold uppercase tracking-widest opacity-80">
-        Step {stepIndex + 1} of {totalSteps}
+        {stepLabel(language, stepIndex + 1, totalSteps)}
       </p>
 
       {currentStep && (
         <div className="grid gap-3">
           <label htmlFor={`step-${currentStep.id}`} className="landing-strong text-lg">
-            {pickLang(currentStep.label, prefs.language)}
+            {pickLang(currentStep.label, language)}
           </label>
           <p className="caption text-sm leading-relaxed">
-            {pickLang(currentStep.help, prefs.language)}
+            {pickLang(currentStep.help, language)}
           </p>
 
           <input
@@ -144,7 +183,7 @@ export function StepWizard({ templates }) {
           disabled={stepIndex === 0}
           className="btn-ink bg-white px-6 py-2.5 text-sm"
         >
-          Back
+          {pickLang(WIZARD.back, language)}
         </button>
         <button
           type="button"
@@ -152,7 +191,9 @@ export function StepWizard({ templates }) {
           className="btn-ink px-6 py-2.5 text-sm text-white"
           style={{ backgroundColor: "var(--blue)" }}
         >
-          {stepIndex >= totalSteps - 1 ? "Finish" : "Next step"}
+          {stepIndex >= totalSteps - 1
+            ? pickLang(WIZARD.finish, language)
+            : pickLang(WIZARD.nextStep, language)}
         </button>
       </div>
     </div>

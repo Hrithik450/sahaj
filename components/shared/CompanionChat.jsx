@@ -4,9 +4,66 @@ import { useEffect, useRef, useState } from "react";
 import { Loader2, SendHorizontal } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { COMPANION_PROMPTS } from "@/lib/companion";
+import { pickLang } from "@/lib/i18n";
 import { speak } from "@/lib/voice";
 
-function MessageBubble({ role, content, live = false }) {
+const CHAT = {
+  you: { en: "You", hi: "आप", kn: "ನೀವು" },
+  assistant: { en: "Sahaj", hi: "सहज", kn: "ಸಹಜ" },
+  tryQuestion: {
+    en: "Try a question",
+    hi: "एक सवाल आज़माएं",
+    kn: "ಒಂದು ಪ್ರಶ್ನೆ ಪ್ರಯತ್ನಿಸಿ",
+  },
+  emptyState: {
+    en: "Ask a plain-language question. Sahaj replies in short steps you can read and hear.",
+    hi: "सरल भाषा में सवाल पूछें। सहज छोटे चरणों में जवाब देता है जिन्हें आप पढ़ और सुन सकते हैं।",
+    kn: "ಸರಳ ಭಾಷೆಯಲ್ಲಿ ಪ್ರಶ್ನೆ ಕೇಳಿ. ಸಹಜ ನೀವು ಓದಬಹುದಾದ ಮತ್ತು ಕೇಳಬಹುದಾದ ಚಿಕ್ಕ ಹಂತಗಳಲ್ಲಿ ಉತ್ತರಿಸುತ್ತದೆ.",
+  },
+  messagesAria: {
+    en: "Companion chat messages",
+    hi: "साथी चैट संदेश",
+    kn: "ಸಂಗಾತಿ ಚಾಟ್ ಸಂದೇಶಗಳು",
+  },
+  questionLabel: {
+    en: "Your question",
+    hi: "आपका सवाल",
+    kn: "ನಿಮ್ಮ ಪ್ರಶ್ನೆ",
+  },
+  placeholderGov: {
+    en: "Example: What documents for income certificate?",
+    hi: "उदाहरण: income certificate के लिए कौन से documents?",
+    kn: "ಉದಾಹರಣೆ: income certificate ಗಾಗಿ ಯಾವ documents?",
+  },
+  placeholderBank: {
+    en: "Example: How do I block my card?",
+    hi: "उदाहरण: कार्ड कैसे ब्लॉक करूं?",
+    kn: "ಉದಾಹರಣೆ: ಕಾರ್ಡ್ ಅನ್ನು ಹೇಗೆ ನಿರ್ಬಂಧಿಸುವುದು?",
+  },
+  send: { en: "Send", hi: "भेजें", kn: "ಕಳುಹಿಸಿ" },
+  chatFailed: {
+    en: "Chat request failed.",
+    hi: "चैट अनुरोध विफल।",
+    kn: "ಚಾಟ್ ವಿನಂತಿ ವಿಫಲವಾಗಿದೆ.",
+  },
+  noStream: {
+    en: "No response stream available.",
+    hi: "कोई प्रतिक्रिया स्ट्रीम उपलब्ध नहीं।",
+    kn: "ಯಾವುದೇ ಪ್ರತಿಕ್ರಿಯೆ ಸ್ಟ್ರೀಮ್ ಲಭ್ಯವಿಲ್ಲ.",
+  },
+  genericError: {
+    en: "Something went wrong.",
+    hi: "कुछ गलत हो गया।",
+    kn: "ಏನೋ ತಪ್ಪಾಗಿದೆ.",
+  },
+  offlineNote: {
+    en: "Showing offline demo answers.",
+    hi: "ऑफ़लाइन डेमो जवाब दिखाए जा रहे हैं।",
+    kn: "ಆಫ್‌ಲೈನ್ ಡೆಮೊ ಉತ್ತರಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ.",
+  },
+};
+
+function MessageBubble({ role, content, live = false, language }) {
   const isUser = role === "user";
 
   return (
@@ -20,7 +77,9 @@ function MessageBubble({ role, content, live = false }) {
         aria-live={live ? "polite" : undefined}
       >
         <p className="caption mb-1 text-[0.65rem] font-bold uppercase tracking-widest opacity-80">
-          {isUser ? "You" : "Sahaj"}
+          {isUser
+            ? pickLang(CHAT.you, language)
+            : pickLang(CHAT.assistant, language)}
         </p>
         <p className="whitespace-pre-wrap">{content}</p>
       </div>
@@ -30,6 +89,7 @@ function MessageBubble({ role, content, live = false }) {
 
 export function CompanionChat({ domain = "gov" }) {
   const { prefs } = useAccessability();
+  const language = prefs.language;
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [streamingText, setStreamingText] = useState("");
@@ -72,14 +132,14 @@ export function CompanionChat({ domain = "gov" }) {
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || "Chat request failed.");
+        throw new Error(data.error || pickLang(CHAT.chatFailed, language));
       }
 
       setSource(response.headers.get("X-Sahaj-Source") || "");
 
       const reader = response.body?.getReader();
       if (!reader) {
-        throw new Error("No response stream available.");
+        throw new Error(pickLang(CHAT.noStream, language));
       }
 
       const decoder = new TextDecoder();
@@ -100,7 +160,7 @@ export function CompanionChat({ domain = "gov" }) {
         speak(assistantText, { language: prefs.language });
       }
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      setError(err.message || pickLang(CHAT.genericError, language));
     } finally {
       setLoading(false);
     }
@@ -109,7 +169,9 @@ export function CompanionChat({ domain = "gov" }) {
   return (
     <div className="grid gap-5">
       <div>
-        <p className="caption mb-3 text-sm font-semibold">Try a question</p>
+        <p className="caption mb-3 text-sm font-semibold">
+          {pickLang(CHAT.tryQuestion, language)}
+        </p>
         <div className="flex flex-wrap gap-2">
           {prompts.map((prompt) => (
             <button
@@ -128,12 +190,11 @@ export function CompanionChat({ domain = "gov" }) {
       <div
         ref={listRef}
         className="grid max-h-[22rem] gap-3 overflow-y-auto rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-4"
-        aria-label="Companion chat messages"
+        aria-label={pickLang(CHAT.messagesAria, language)}
       >
         {messages.length === 0 && !streamingText && (
           <p className="text-sm leading-relaxed text-[var(--muted)]">
-            Ask a plain-language question. Sahaj replies in short steps you can
-            read and hear.
+            {pickLang(CHAT.emptyState, language)}
           </p>
         )}
 
@@ -142,11 +203,17 @@ export function CompanionChat({ domain = "gov" }) {
             key={`${message.role}-${index}`}
             role={message.role}
             content={message.content}
+            language={language}
           />
         ))}
 
         {streamingText && (
-          <MessageBubble role="assistant" content={streamingText} live />
+          <MessageBubble
+            role="assistant"
+            content={streamingText}
+            live
+            language={language}
+          />
         )}
       </div>
 
@@ -158,16 +225,17 @@ export function CompanionChat({ domain = "gov" }) {
         }}
       >
         <label className="grid gap-2">
-          <span className="caption text-sm font-semibold">Your question</span>
+          <span className="caption text-sm font-semibold">
+            {pickLang(CHAT.questionLabel, language)}
+          </span>
           <input
             value={input}
             onChange={(event) => setInput(event.target.value)}
             className="ink-input"
-            placeholder={
-              domain === "bank"
-                ? "Example: How do I block my card?"
-                : "Example: What documents for income certificate?"
-            }
+            placeholder={pickLang(
+              domain === "bank" ? CHAT.placeholderBank : CHAT.placeholderGov,
+              language,
+            )}
             disabled={loading}
           />
         </label>
@@ -183,7 +251,7 @@ export function CompanionChat({ domain = "gov" }) {
           ) : (
             <SendHorizontal className="h-4 w-4" aria-hidden />
           )}
-          Send
+          {pickLang(CHAT.send, language)}
         </button>
       </form>
 
@@ -194,7 +262,7 @@ export function CompanionChat({ domain = "gov" }) {
       )}
 
       {source === "fallback" && messages.length > 0 && (
-        <p className="caption text-xs">Showing offline demo answers.</p>
+        <p className="caption text-xs">{pickLang(CHAT.offlineNote, language)}</p>
       )}
     </div>
   );
