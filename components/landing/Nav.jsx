@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/brand/Logo";
+import { VoiceStartButton } from "@/components/voice/VoiceStartButton";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -44,8 +45,9 @@ export function Nav() {
           })}
         </nav>
 
-        {/* Voice controls */}
-        <div className="col-start-3 justify-self-end" id="nav-actions" />
+        <div className="col-start-3 justify-self-end" id="nav-actions">
+          <VoiceStartButton />
+        </div>
       </div>
     </header>
   );

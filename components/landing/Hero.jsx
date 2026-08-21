@@ -1,6 +1,7 @@
 import { SITE } from "@/lib/site";
 import { AccessibilityNeedCards } from "@/components/landing/AccessabilityNeedCards";
 import { LanguagePicker } from "@/components/landing/LanguagePicker";
+import { SetupContinue } from "@/components/landing/SetupContinue";
 
 export function Hero() {
   return (
@@ -30,6 +31,7 @@ export function Hero() {
           <div className="mt-8">
             <AccessibilityNeedCards />
             <LanguagePicker />
+            <SetupContinue />
           </div>
         </div>
 
