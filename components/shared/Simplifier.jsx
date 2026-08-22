@@ -112,10 +112,7 @@ export function Simplifier({ domain, samples }) {
       return;
     }
 
-    if (
-      domain === "gov" &&
-      sessionStatus === "unauthenticated"
-    ) {
+    if (domain === "gov" && sessionStatus === "unauthenticated") {
       router.push(buildLoginUrlForGovernmentSimplify());
       return;
     }
@@ -138,8 +135,7 @@ export function Simplifier({ domain, samples }) {
           domain,
           language: prefs.language,
           need: prefs.need,
-          sampleId:
-            activeSampleId && !fromPhoto ? activeSampleId : undefined,
+          sampleId: activeSampleId && !fromPhoto ? activeSampleId : undefined,
         }),
       });
 
@@ -168,8 +164,7 @@ export function Simplifier({ domain, samples }) {
       activeSampleId &&
       !fromPhoto &&
       samples.find(
-        (sample) =>
-          sample.id === activeSampleId && sample.text === inputText,
+        (sample) => sample.id === activeSampleId && sample.text === inputText,
       );
 
     if (sampleMatch) {
@@ -318,7 +313,9 @@ export function Simplifier({ domain, samples }) {
       {result && (
         <div className="grid gap-4 rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-4 sm:p-5">
           <div className="flex items-start justify-between gap-3">
-            <p className="text-sm leading-relaxed sm:text-base">{result.summary}</p>
+            <p className="text-sm leading-relaxed sm:text-base">
+              {result.summary}
+            </p>
             <VoiceReplayButton
               text={resultSpeech}
               language={language}
