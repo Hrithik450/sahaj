@@ -3,24 +3,48 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { playHeroIntro, stopSpeaking, unlockVoice } from "@/lib/voice";
-import { LiveCaption } from "@/components/voice/LiveCaption";
+import { playBankingPageIntro, playGovernmentPageIntro, playHeroIntro, stopSpeaking, unlockVoice } from "@/lib/voice";
+
+const NAV_VOICE_KEY = "sahaj-nav-voice";
+
+export function markNavVoiceIntent(domain) {
+  if (typeof window === "undefined") return;
+  if (domain === "government" || domain === "banking") {
+    sessionStorage.setItem(NAV_VOICE_KEY, domain);
+  }
+}
 
 export function VoiceShell({ children }) {
   const pathname = usePathname();
   const { prefs } = useAccessability();
 
   useEffect(() => {
-    if (!prefs.voiceEnabled || pathname !== "/") return;
-    playHeroIntro(prefs.language);
+    if (!prefs.voiceEnabled) return;
+
+    if (pathname === "/") {
+      playHeroIntro(prefs.language);
+      return;
+    }
+
+    const navVoice =
+      typeof window !== "undefined"
+        ? sessionStorage.getItem(NAV_VOICE_KEY)
+        : null;
+    if (!navVoice) return;
+
+    if (navVoice === "government" && pathname === "/government") {
+      sessionStorage.removeItem(NAV_VOICE_KEY);
+      playGovernmentPageIntro(prefs.language);
+      return;
+    }
+
+    if (navVoice === "banking" && pathname === "/banking") {
+      sessionStorage.removeItem(NAV_VOICE_KEY);
+      playBankingPageIntro(prefs.language);
+    }
   }, [prefs.voiceEnabled, prefs.language, pathname]);
 
-  return (
-    <>
-      {children}
-      <LiveCaption />
-    </>
-  );
+  return <>{children}</>;
 }
 
 export function useVoiceControl() {

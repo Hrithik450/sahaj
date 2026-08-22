@@ -7,6 +7,7 @@ import { useAccessability } from "@/components/accessability/AccessabilityProvid
 import { NavAuth } from "@/components/auth/NavAuth";
 import { Logo } from "@/components/brand/Logo";
 import { NavLanguageButton } from "@/components/landing/NavLanguageButton";
+import { markNavVoiceIntent } from "@/components/voice/VoiceShell";
 import { VoiceStartButton } from "@/components/voice/VoiceStartButton";
 import { pickLang } from "@/lib/i18n";
 
@@ -65,6 +66,7 @@ export function Nav() {
                   href={link.href}
                   aria-label={label}
                   aria-current={active ? "page" : undefined}
+                  onClick={() => markNavVoiceIntent(link.key)}
                   className="btn-ink flex h-9 w-9 items-center justify-center bg-white p-0"
                   style={{
                     borderColor: active ? "var(--blue)" : "var(--ink)",
@@ -87,6 +89,7 @@ export function Nav() {
                   key={link.href}
                   href={link.href}
                   aria-current={active ? "page" : undefined}
+                  onClick={() => markNavVoiceIntent(link.key)}
                   className="font-semibold transition-colors"
                   style={{
                     color: active ? "var(--blue)" : "var(--muted)",

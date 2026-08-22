@@ -15,8 +15,6 @@ import {
   readAccessabilityPrefs,
   writeAccessabilityPrefs,
 } from "@/lib/accessability";
-import { playGovernmentFeaturesIntro } from "@/lib/voice";
-
 const AccessabilityContext = createContext(null);
 
 function subscribe(callback) {
@@ -56,14 +54,8 @@ export function AccessabilityProvider({ children }) {
     updatePrefs({ setupComplete: true });
     document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
 
-    if (prefs.voiceEnabled) {
-      window.setTimeout(() => {
-        playGovernmentFeaturesIntro(prefs.language);
-      }, 500);
-    }
-
     return true;
-  }, [prefs.need, prefs.voiceEnabled, prefs.language, updatePrefs]);
+  }, [prefs.need, updatePrefs]);
 
   const value = useMemo(
     () => ({

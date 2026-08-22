@@ -4,13 +4,16 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { text, language = "en" } = body;
+    const { text, language = "en", style } = body;
 
     if (!text || typeof text !== "string") {
       return NextResponse.json({ error: "Text is required." }, { status: 400 });
     }
 
-    const result = await synthesizeGeminiSpeech(text, { language });
+    const result = await synthesizeGeminiSpeech(text, {
+      language,
+      style: typeof style === "string" ? style : undefined,
+    });
     if (!result) {
       return NextResponse.json(
         { error: "Speech synthesis is unavailable." },

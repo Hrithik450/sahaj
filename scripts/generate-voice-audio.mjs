@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
 // Only run this local as it required node.js runtime
-import { mkdir, writeFile } from "node:fs/promises";
+import { access, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { LANGUAGES } from "../lib/data/languages.js";
-import { governmentFeaturesVoicePrompt } from "../lib/data/features-voice.js";
-import { heroVoicePrompt } from "../lib/data/hero-voice.js";
+import {
+  bankingPageVoicePrompt,
+  governmentPageVoicePrompt,
+} from "../lib/data/page-voice.js";
 import { synthesizeGeminiSpeech } from "../lib/gemini-tts.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -14,23 +16,39 @@ const rootDir = path.join(__dirname, "..");
 
 const VOICE_JOBS = [
   {
-    name: "hero",
-    outputDir: path.join(rootDir, "public/audio/hero"),
-    fileName: (language) => `${language.id}.wav`,
-    prompt: (language) => heroVoicePrompt(language.id),
+    name: "government page",
+    outputDir: path.join(rootDir, "public/audio/pages"),
+    fileName: (language) => `government-${language.id}.wav`,
+    prompt: (language) => governmentPageVoicePrompt(language.id),
   },
   {
-    name: "government features",
-    outputDir: path.join(rootDir, "public/audio/features"),
-    fileName: (language) => `government-${language.id}.wav`,
-    prompt: (language) => governmentFeaturesVoicePrompt(language.id),
+    name: "banking page",
+    outputDir: path.join(rootDir, "public/audio/pages"),
+    fileName: (language) => `banking-${language.id}.wav`,
+    prompt: (language) => bankingPageVoicePrompt(language.id),
   },
 ];
+
+async function fileExists(filePath) {
+  try {
+    await access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 async function generateJob(job) {
   await mkdir(job.outputDir, { recursive: true });
 
   for (const language of LANGUAGES) {
+    const filePath = path.join(job.outputDir, job.fileName(language));
+
+    if (await fileExists(filePath)) {
+      console.log(`Skipping ${job.name} ${language.id} — already exists`);
+      continue;
+    }
+
     const prompt = job.prompt(language);
     console.log(`Generating ${job.name} ${language.id} (${language.label})...`);
 
@@ -43,7 +61,6 @@ async function generateJob(job) {
       );
     }
 
-    const filePath = path.join(job.outputDir, job.fileName(language));
     await writeFile(filePath, result.wav);
     console.log(`Wrote ${filePath} (${result.wav.length} bytes)`);
   }
@@ -59,7 +76,7 @@ async function main() {
     await generateJob(job);
   }
 
-  console.log("Done. Voice audio files are stored in public/audio/");
+  console.log("Done. Page voice audio is stored in public/audio/pages/");
 }
 
 main().catch((error) => {

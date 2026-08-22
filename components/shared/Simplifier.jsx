@@ -53,11 +53,6 @@ const SIMPLIFIER = {
     kn: "ಮುಂದೆ ಏನು ಮಾಡಬೇಕು",
   },
   warnings: { en: "Warnings", hi: "चेतावनी", kn: "ಎಚ್ಚರಿಕೆಗಳು" },
-  offlineNote: {
-    en: "Showing offline demo summary.",
-    hi: "ऑफ़लाइन डेमो सारांश दिखाया जा रहा है।",
-    kn: "ಆಫ್‌ಲೈನ್ ಡೆಮೊ ಸಾರಾಂಶ ತೋರಿಸಲಾಗುತ್ತಿದೆ.",
-  },
 };
 
 export function Simplifier({ domain, samples }) {
@@ -91,7 +86,9 @@ export function Simplifier({ domain, samples }) {
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || pickLang(SIMPLIFIER.requestFailed, language));
+        throw new Error(
+          data.error || pickLang(SIMPLIFIER.requestFailed, language),
+        );
       }
 
       setResult(data);
@@ -203,12 +200,6 @@ export function Simplifier({ domain, samples }) {
                 ))}
               </ul>
             </div>
-          )}
-
-          {result.source === "fallback" && (
-            <p className="caption text-xs">
-              {pickLang(SIMPLIFIER.offlineNote, language)}
-            </p>
           )}
         </div>
       )}
