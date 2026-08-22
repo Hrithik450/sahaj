@@ -1,28 +1,63 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
-import { Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
+import { VoiceReplayButton } from "@/components/voice/VoiceReplayButton";
 import { GOV_SERVICES } from "@/lib/data/gov/services";
+import {
+  servicePortalHost,
+  servicePortalPath,
+  servicePortalSteps,
+  servicePortalVoice,
+} from "@/lib/data/gov/service-portal";
 import { matchGovServices } from "@/lib/finder";
 import { pickLang } from "@/lib/i18n";
-import { speak } from "@/lib/voice";
+import { speakSarvam, stopSpeaking } from "@/lib/voice";
 
 const EXAMPLE_QUERIES = [
-  "birth certificate",
-  "income certificate",
-  "property tax",
-  "ration card",
-  "scholarship income proof",
+  {
+    search: "birth certificate",
+    label: {
+      en: "birth certificate",
+      hi: "जन्म प्रमाण पत्र",
+      kn: "ಜನ್ಮ ಪ್ರಮಾಣಪತ್ರ",
+    },
+  },
+  {
+    search: "income certificate",
+    label: {
+      en: "income certificate",
+      hi: "आय प्रमाण पत्र",
+      kn: "ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ",
+    },
+  },
+  {
+    search: "property tax",
+    label: {
+      en: "property tax",
+      hi: "संपत्ति कर",
+      kn: "ಆಸ್ತಿ ತೆರಿಗೆ",
+    },
+  },
+  {
+    search: "ration card",
+    label: {
+      en: "ration card",
+      hi: "राशन कार्ड",
+      kn: "ರೇಶನ್ ಕಾರ್ಡ್",
+    },
+  },
+  {
+    search: "scholarship income proof",
+    label: {
+      en: "scholarship income proof",
+      hi: "छात्रवृत्ति आय प्रमाण",
+      kn: "ವಿದ್ಯಾರ್ಥಿವೇತನ ಆದಾಯ ದಾಖಲೆ",
+    },
+  },
 ];
 
 const FINDER = {
-  noMatchVoice: {
-    en: "No matching service found. Try income certificate or birth certificate.",
-    hi: "कोई सेवा नहीं मिली। income certificate या birth certificate आज़माएं।",
-    kn: "ಯಾವುದೇ ಸೇವೆ ಸಿಗಲಿಲ್ಲ. income certificate ಅಥವಾ birth certificate ಪ್ರಯತ್ನಿಸಿ.",
-  },
   queryLabel: {
     en: "What government service do you need?",
     hi: "आपको कौन सी सरकारी सेवा चाहिए?",
@@ -30,8 +65,8 @@ const FINDER = {
   },
   queryPlaceholder: {
     en: "Example: income certificate for scholarship",
-    hi: "उदाहरण: scholarship के लिए income certificate",
-    kn: "ಉದಾಹರಣೆ: scholarship ಗಾಗಿ income certificate",
+    hi: "उदाहरण: छात्रवृत्ति के लिए आय प्रमाण पत्र",
+    kn: "ಉದಾಹರಣೆ: ವಿದ್ಯಾರ್ಥಿವೇತನಕ್ಕಾಗಿ ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ",
   },
   findService: {
     en: "Find service",
@@ -40,19 +75,23 @@ const FINDER = {
   },
   noResults: {
     en: "No match yet. Try words like income, birth, ration, property tax, or caste certificate.",
-    hi: "अभी कोई मिलान नहीं। income, birth, ration, property tax या caste certificate शब्द आज़माएं।",
-    kn: "ಇನ್ನೂ ಹೊಂದಾಣಿಕೆ ಇಲ್ಲ. income, birth, ration, property tax ಅಥವಾ caste certificate ಪದಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
+    hi: "अभी कोई मिलान नहीं। आय, जन्म, राशन, संपत्ति कर या जाति प्रमाण पत्र शब्द आज़माएं।",
+    kn: "ಇನ್ನೂ ಹೊಂದಾಣಿಕೆ ಇಲ್ಲ. ಆದಾಯ, ಜನ್ಮ, ರೇಶನ್, ಆಸ್ತಿ ತೆರಿಗೆ ಅಥವಾ ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ ಪದಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
   },
-  nextPrefix: { en: "Next: ", hi: "अगला: ", kn: "ಮುಂದೆ: " },
-  openForm: {
-    en: "Open guided form",
-    hi: "मार्गदर्शित फॉर्म खोलें",
-    kn: "ಮಾರ್ಗದರ್ಶಿತ ಫಾರ್ಮ್ ತೆರೆಯಿರಿ",
+  portalLabel: {
+    en: "Government portal",
+    hi: "सरकारी पोर्टल",
+    kn: "ಸರ್ಕಾರಿ ಪೋರ್ಟಲ್",
   },
-  simplifyNotice: {
-    en: "Simplify a notice",
-    hi: "नोटिस सरल करें",
-    kn: "ಸೂಚನೆ ಸರಳಗೊಳಿಸಿ",
+  navigationLabel: {
+    en: "Navigation",
+    hi: "नेविगेशन",
+    kn: "ನ್ಯಾವಿಗೇಶನ್",
+  },
+  resultHint: {
+    en: "Follow this path on the portal. Use the speaker to hear it again.",
+    hi: "पोर्टल पर इस पथ का पालन करें। फिर सुनने के लिए स्पीकर बटन दबाएं।",
+    kn: "ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ಈ ಮಾರ್ಗವನ್ನು ಅನುಸರಿಸಿ. ಮತ್ತೆ ಕೇಳಲು ಸ್ಪೀಕರ್ ಬಟನ್ ಒತ್ತಿ.",
   },
 };
 
@@ -61,32 +100,32 @@ export function ServiceFinder() {
   const language = prefs.language;
   const [query, setQuery] = useState("");
   const [searched, setSearched] = useState(false);
+  const [searchKey, setSearchKey] = useState(0);
 
   const results = useMemo(
     () => matchGovServices(query, GOV_SERVICES),
     [query],
   );
 
+  const topResult = searched && results.length > 0 ? results[0] : null;
+
   function runSearch(nextQuery = query) {
     setQuery(nextQuery);
     setSearched(true);
-
-    const matches = matchGovServices(nextQuery, GOV_SERVICES);
-    if (!prefs.voiceEnabled) return;
-
-    if (matches.length === 0) {
-      speak(pickLang(FINDER.noMatchVoice, language), {
-        language: prefs.language,
-      });
-      return;
-    }
-
-    const top = matches[0];
-    speak(
-      `Best match: ${pickLang(top.title, prefs.language)}. ${pickLang(top.summary, prefs.language)}`,
-      { language: prefs.language },
-    );
+    setSearchKey((key) => key + 1);
+    stopSpeaking();
   }
+
+  useEffect(() => {
+    if (!topResult || !prefs.voiceEnabled) return;
+
+    const voiceText = servicePortalVoice(topResult, language);
+    void speakSarvam(voiceText, { language: prefs.language });
+  }, [searchKey, prefs.voiceEnabled]);
+
+  const host = topResult ? servicePortalHost(topResult.id, language) : "";
+  const steps = topResult ? servicePortalSteps(topResult.id, language) : [];
+  const voiceText = topResult ? servicePortalVoice(topResult, language) : "";
 
   return (
     <div className="grid gap-5">
@@ -94,32 +133,26 @@ export function ServiceFinder() {
         <span className="caption text-sm font-semibold">
           {pickLang(FINDER.queryLabel, language)}
         </span>
-        <div className="relative">
-          <Search
-            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]"
-            aria-hidden
-          />
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") runSearch();
-            }}
-            className="ink-input pl-10"
-            placeholder={pickLang(FINDER.queryPlaceholder, language)}
-          />
-        </div>
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") runSearch();
+          }}
+          className="ink-input"
+          placeholder={pickLang(FINDER.queryPlaceholder, language)}
+        />
       </label>
 
       <div className="flex flex-wrap gap-2">
         {EXAMPLE_QUERIES.map((example) => (
           <button
-            key={example}
+            key={example.search}
             type="button"
-            onClick={() => runSearch(example)}
+            onClick={() => runSearch(example.search)}
             className="btn-ink bg-white px-3 py-1.5 text-xs sm:text-sm"
           >
-            {example}
+            {pickLang(example.label, language)}
           </button>
         ))}
       </div>
@@ -139,41 +172,40 @@ export function ServiceFinder() {
         </p>
       )}
 
-      {results.length > 0 && (
+      {topResult && (
         <div className="grid gap-3">
-          {results.map((service) => (
-            <article
-              key={service.id}
-              className="rounded-xl border border-[var(--ink)] bg-white p-4 sm:p-5"
-            >
-              <h3 className="landing-strong text-lg">
-                {pickLang(service.title, language)}
-              </h3>
-              <p className="caption mt-2 text-sm leading-relaxed">
-                {pickLang(service.summary, language)}
-              </p>
-              <p className="mt-3 text-sm leading-relaxed">
-                <span className="font-bold">
-                  {pickLang(FINDER.nextPrefix, language)}
-                </span>
-                {pickLang(service.nextStep, language)}
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Link
-                  href="#form"
-                  className="btn-ink bg-white px-4 py-2 text-xs sm:text-sm"
-                >
-                  {pickLang(FINDER.openForm, language)}
-                </Link>
-                <Link
-                  href="#simplify"
-                  className="btn-ink bg-white px-4 py-2 text-xs sm:text-sm"
-                >
-                  {pickLang(FINDER.simplifyNotice, language)}
-                </Link>
+          <p className="caption text-sm leading-relaxed">
+            {pickLang(FINDER.resultHint, language)}
+          </p>
+          <article className="rounded-xl border border-[var(--ink)] bg-white p-4 ring-2 ring-[var(--blue)] sm:p-5">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0 flex-1">
+                <p className="caption text-xs font-semibold uppercase tracking-wide">
+                  {pickLang(FINDER.portalLabel, language)}
+                </p>
+                <p className="landing-strong mt-1 font-mono text-base sm:text-lg">
+                  {host}
+                </p>
+
+                <p className="caption mt-4 text-xs font-semibold uppercase tracking-wide">
+                  {pickLang(FINDER.navigationLabel, language)}
+                </p>
+                <p className="mt-1 font-mono text-xs leading-relaxed sm:text-sm">
+                  {steps.join(" → ")}
+                </p>
+
+                <p className="mt-3 text-xs leading-relaxed text-[var(--muted)]">
+                  {servicePortalPath(topResult.id, language)}
+                </p>
               </div>
-            </article>
-          ))}
+
+              <VoiceReplayButton
+                text={voiceText}
+                language={language}
+                liveReplay
+              />
+            </div>
+          </article>
         </div>
       )}
     </div>

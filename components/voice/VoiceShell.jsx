@@ -55,7 +55,10 @@ export function VoiceShell({ children }) {
   const { prefs } = useAccessability();
 
   useEffect(() => {
-    if (!prefs.voiceEnabled) return;
+    if (!prefs.voiceEnabled) {
+      stopSpeaking();
+      return;
+    }
 
     if (pathname === "/") {
       playHeroIntro(prefs.language);

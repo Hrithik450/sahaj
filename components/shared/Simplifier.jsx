@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Camera, Loader2, Upload } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { VoiceReplayButton } from "@/components/voice/VoiceReplayButton";
+import { formatSimplifierSpeech } from "@/lib/data/simplifier-speech";
 import { pickLang } from "@/lib/i18n";
 import { extractTextFromImage } from "@/lib/ocr";
-import { speak } from "@/lib/voice";
+import { playSampleSimplifierSpeech, speakSarvam } from "@/lib/voice";
 
 const SIMPLIFIER = {
   emptyError: {
@@ -44,11 +45,6 @@ const SIMPLIFIER = {
     hi: "मेरे लिए सरल करें",
     kn: "ನನ್ನಿಗಾಗಿ ಸರಳಗೊಳಿಸಿ",
   },
-  plainSummary: {
-    en: "Plain summary",
-    hi: "सरल सारांश",
-    kn: "ಸರಳ ಸಾರಾಂಶ",
-  },
   nextSteps: {
     en: "What to do next",
     hi: "आगे क्या करें",
@@ -82,14 +78,6 @@ const SIMPLIFIER = {
   },
 };
 
-function formatSimplifierSpeech(result) {
-  const parts = [];
-  if (result.summary) parts.push(result.summary);
-  if (result.actions?.length) parts.push(...result.actions);
-  if (result.warnings?.length) parts.push(...result.warnings);
-  return parts.join(" ");
-}
-
 export function Simplifier({ domain, samples }) {
   const { prefs } = useAccessability();
   const language = prefs.language;
@@ -100,7 +88,18 @@ export function Simplifier({ domain, samples }) {
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState("");
+  const [activeSampleId, setActiveSampleId] = useState(null);
+  const [fromPhoto, setFromPhoto] = useState(false);
+  const languageRef = useRef(prefs.language);
   const busy = loading || scanning;
+
+  useEffect(() => {
+    const previousLanguage = languageRef.current;
+    languageRef.current = prefs.language;
+    if (previousLanguage === prefs.language) return;
+    if (!text.trim() || !result) return;
+    void runSimplify(text);
+  }, [prefs.language]);
 
   async function runSimplify(inputText = text) {
     if (!inputText.trim()) {
@@ -120,6 +119,7 @@ export function Simplifier({ domain, samples }) {
           domain,
           language: prefs.language,
           need: prefs.need,
+          allowNoticeFallback: Boolean(activeSampleId && !fromPhoto),
         }),
       });
 
@@ -133,8 +133,22 @@ export function Simplifier({ domain, samples }) {
       setResult(data);
 
       if (prefs.voiceEnabled) {
-        const speech = formatSimplifierSpeech(data);
-        if (speech) speak(speech, { language: prefs.language });
+        const speech = formatSimplifierSpeech(data, prefs.language);
+        if (!speech) return;
+
+        const sampleMatch =
+          activeSampleId &&
+          !fromPhoto &&
+          samples.find(
+            (sample) =>
+              sample.id === activeSampleId && sample.text === inputText,
+          );
+
+        if (sampleMatch) {
+          await playSampleSimplifierSpeech(sampleMatch.id, prefs.language);
+        } else if (fromPhoto) {
+          await speakSarvam(speech, { language: prefs.language });
+        }
       }
     } catch (err) {
       setError(err.message || pickLang(SIMPLIFIER.genericError, language));
@@ -146,6 +160,8 @@ export function Simplifier({ domain, samples }) {
 
   function loadSample(sample) {
     setText(sample.text);
+    setActiveSampleId(sample.id);
+    setFromPhoto(false);
     setResult(null);
     setError("");
   }
@@ -164,6 +180,8 @@ export function Simplifier({ domain, samples }) {
         return;
       }
       setText(extracted);
+      setFromPhoto(true);
+      setActiveSampleId(null);
     } catch {
       setError(pickLang(SIMPLIFIER.ocrFailed, language));
     } finally {
@@ -173,7 +191,7 @@ export function Simplifier({ domain, samples }) {
     }
   }
 
-  const resultSpeech = result ? formatSimplifierSpeech(result) : "";
+  const resultSpeech = result ? formatSimplifierSpeech(result, language) : "";
 
   return (
     <div className="grid gap-6">
@@ -187,7 +205,11 @@ export function Simplifier({ domain, samples }) {
               key={sample.id}
               type="button"
               onClick={() => loadSample(sample)}
-              className="btn-ink bg-white px-3 py-1.5 text-xs sm:text-sm"
+              className={`btn-ink px-3 py-1.5 text-xs sm:text-sm ${
+                activeSampleId === sample.id && !fromPhoto
+                  ? "ring-2 ring-[var(--blue)]"
+                  : "bg-white"
+              }`}
             >
               {pickLang(sample.title, language)}
             </button>
@@ -238,7 +260,11 @@ export function Simplifier({ domain, samples }) {
         </div>
         <textarea
           value={text}
-          onChange={(event) => setText(event.target.value)}
+          onChange={(event) => {
+            setText(event.target.value);
+            setActiveSampleId(null);
+            setFromPhoto(false);
+          }}
           rows={7}
           className="ink-input min-h-[9rem] resize-y"
           placeholder={pickLang(SIMPLIFIER.pastePlaceholder, language)}
@@ -271,12 +297,14 @@ export function Simplifier({ domain, samples }) {
       {result && (
         <div className="grid gap-4 rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-4 sm:p-5">
           <div className="flex items-start justify-between gap-3">
-            <p className="caption text-xs font-bold uppercase tracking-widest">
-              {pickLang(SIMPLIFIER.plainSummary, language)}
-            </p>
-            <VoiceReplayButton text={resultSpeech} language={language} />
+            <p className="text-sm leading-relaxed sm:text-base">{result.summary}</p>
+            <VoiceReplayButton
+              text={resultSpeech}
+              language={language}
+              sampleNoticeId={fromPhoto ? undefined : activeSampleId}
+              liveReplay={fromPhoto}
+            />
           </div>
-          <p className="text-sm leading-relaxed sm:text-base">{result.summary}</p>
 
           {result.actions?.length > 0 && (
             <div>

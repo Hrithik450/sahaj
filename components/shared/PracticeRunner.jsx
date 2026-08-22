@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { GOV_SERVICES } from "@/lib/data/gov/services";
 import { pickLang } from "@/lib/i18n";
-import { speak } from "@/lib/voice";
+import { speakSarvam } from "@/lib/voice";
 
 const FRAUD_DISTRACTORS = [
   {
@@ -66,9 +66,9 @@ const PRACTICE = {
     kn: "ಪರಿದೃಶ್ಯ ಆಯ್ಕೆಮಾಡಿ",
   },
   safeBanner: {
-    en: "Safe practice only. Mistakes here help you learn — nothing is sent to a real office or bank.",
-    hi: "केवल सुरक्षित अभ्यास। यहां गलतियां सीखने में मदद करती हैं — किसी वास्तविक कार्यालय या बैंक को कुछ नहीं भेजा जाता।",
-    kn: "ಸುರಕ್ಷಿತ ಅಭ್ಯಾಸ ಮಾತ್ರ. ಇಲ್ಲಿನ ತಪ್ಪುಗಳು ಕಲಿಯಲು ಸಹಾಯ ಮಾಡುತ್ತವೆ — ಯಾವುದೇ ನಿಜ ಕಚೇರಿ ಅಥವಾ ಬ್ಯಾಂಕ್‌ಗೆ ಏನೂ ಕಳುಹಿಸಲಾಗುವುದಿಲ್ಲ.",
+    en: "Safe practice only. Mistakes here help you learn nothing is sent to a real office or bank.",
+    hi: "केवल सुरक्षित अभ्यास। यहां गलतियां सीखने में मदद करती हैं किसी वास्तविक कार्यालय या बैंक को कुछ नहीं भेजा जाता।",
+    kn: "ಸುರಕ್ಷಿತ ಅಭ್ಯಾಸ ಮಾತ್ರ. ಇಲ್ಲಿನ ತಪ್ಪುಗಳು ಕಲಿಯಲು ಸಹಾಯ ಮಾಡುತ್ತವೆ ಯಾವುದೇ ನಿಜ ಕಚೇರಿ ಅಥವಾ ಬ್ಯಾಂಕ್‌ಗೆ ಏನೂ ಕಳುಹಿಸಲಾಗುವುದಿಲ್ಲ.",
   },
   stepOf: {
     en: (current, total) => `Step ${current} of ${total}`,
@@ -94,7 +94,9 @@ function isStepAnswerCorrect(step, value) {
 }
 
 function getServiceChoices(correctServiceId) {
-  const correct = GOV_SERVICES.find((service) => service.id === correctServiceId);
+  const correct = GOV_SERVICES.find(
+    (service) => service.id === correctServiceId,
+  );
   const distractors = GOV_SERVICES.filter(
     (service) => service.id !== correctServiceId,
   ).slice(0, 2);
@@ -149,7 +151,7 @@ function StepPractice({ scenario, prefs, onComplete }) {
     if (!isStepAnswerCorrect(currentStep, value)) {
       setMistake(currentStep.mistakeHint);
       if (prefs.voiceEnabled) {
-        speak(pickLang(currentStep.mistakeHint, prefs.language), {
+        void speakSarvam(pickLang(currentStep.mistakeHint, prefs.language), {
           language: prefs.language,
         });
       }
@@ -161,7 +163,7 @@ function StepPractice({ scenario, prefs, onComplete }) {
     if (stepIndex >= totalSteps - 1) {
       onComplete();
       if (prefs.voiceEnabled) {
-        speak(pickLang(PRACTICE.stepCompleteVoice, prefs.language), {
+        void speakSarvam(pickLang(PRACTICE.stepCompleteVoice, prefs.language), {
           language: prefs.language,
         });
       }
@@ -173,7 +175,7 @@ function StepPractice({ scenario, prefs, onComplete }) {
     setValue("");
 
     if (prefs.voiceEnabled) {
-      speak(pickLang(steps[nextIndex].label, prefs.language), {
+      void speakSarvam(pickLang(steps[nextIndex].label, prefs.language), {
         language: prefs.language,
       });
     }
@@ -187,7 +189,10 @@ function StepPractice({ scenario, prefs, onComplete }) {
         {stepLabel(prefs.language, stepIndex + 1, totalSteps)}
       </p>
 
-      <label htmlFor={`practice-${currentStep.id}`} className="landing-strong text-lg">
+      <label
+        htmlFor={`practice-${currentStep.id}`}
+        className="landing-strong text-lg"
+      >
         {pickLang(currentStep.label, prefs.language)}
       </label>
 
@@ -229,16 +234,19 @@ function ServicePractice({ scenario, prefs, onComplete }) {
       setMistake(null);
       onComplete();
       if (prefs.voiceEnabled) {
-        speak(pickLang(PRACTICE.correctServiceVoice, prefs.language), {
-          language: prefs.language,
-        });
+        void speakSarvam(
+          pickLang(PRACTICE.correctServiceVoice, prefs.language),
+          {
+            language: prefs.language,
+          },
+        );
       }
       return;
     }
 
     setMistake(scenario.mistakeHint);
     if (prefs.voiceEnabled) {
-      speak(pickLang(scenario.mistakeHint, prefs.language), {
+      void speakSarvam(pickLang(scenario.mistakeHint, prefs.language), {
         language: prefs.language,
       });
     }
@@ -273,7 +281,9 @@ function ActionPractice({ scenario, prefs, onComplete }) {
   const correctText = pickLang(scenario.correctAction, prefs.language);
 
   const choices = useMemo(() => {
-    const wrong = FRAUD_DISTRACTORS.map((item) => pickLang(item, prefs.language));
+    const wrong = FRAUD_DISTRACTORS.map((item) =>
+      pickLang(item, prefs.language),
+    );
     return [correctText, wrong[0], wrong[1]];
   }, [correctText, prefs.language]);
 
@@ -282,7 +292,7 @@ function ActionPractice({ scenario, prefs, onComplete }) {
       setMistake(null);
       onComplete();
       if (prefs.voiceEnabled) {
-        speak(pickLang(PRACTICE.goodCatchVoice, prefs.language), {
+        void speakSarvam(pickLang(PRACTICE.goodCatchVoice, prefs.language), {
           language: prefs.language,
         });
       }
@@ -291,7 +301,7 @@ function ActionPractice({ scenario, prefs, onComplete }) {
 
     setMistake(scenario.mistakeHint);
     if (prefs.voiceEnabled) {
-      speak(pickLang(scenario.mistakeHint, prefs.language), {
+      void speakSarvam(pickLang(scenario.mistakeHint, prefs.language), {
         language: prefs.language,
       });
     }

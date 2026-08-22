@@ -7,9 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:push": "drizzle-kit push",
-    "generate:voice-audio": "node --env-file=.env.local scripts/generate-voice-audio.mjs",
-    "generate:natural-voice": "node --env-file=.env.local scripts/generate-voice-audio.mjs --natural --force"
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

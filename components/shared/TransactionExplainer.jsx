@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { BANK_TRANSACTIONS } from "@/lib/data/bank/transactions";
 import { pickLang } from "@/lib/i18n";
-import { speak } from "@/lib/voice";
+import { speakSarvam } from "@/lib/voice";
 
 const EXPLAINER = {
   emptyError: {
@@ -65,6 +65,13 @@ const EXPLAINER = {
   },
 };
 
+function formatTransactionSpeech(result) {
+  const parts = [];
+  if (result.summary) parts.push(result.summary);
+  if (result.checks?.length) parts.push(...result.checks);
+  return parts.join(". ");
+}
+
 export function TransactionExplainer() {
   const { prefs } = useAccessability();
   const language = prefs.language;
@@ -100,8 +107,11 @@ export function TransactionExplainer() {
 
       setResult(data);
 
-      if (prefs.voiceEnabled && data.summary) {
-        speak(data.summary, { language: prefs.language });
+      if (prefs.voiceEnabled) {
+        const speech = formatTransactionSpeech(data);
+        if (speech) {
+          void speakSarvam(speech, { language: prefs.language });
+        }
       }
     } catch (err) {
       setError(err.message || pickLang(EXPLAINER.genericError, language));

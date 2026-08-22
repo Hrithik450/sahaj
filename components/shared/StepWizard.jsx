@@ -3,14 +3,11 @@
 import { useMemo, useState } from "react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { pickLang } from "@/lib/i18n";
-import { speak } from "@/lib/voice";
+import { speakSarvam, stopSpeaking } from "@/lib/voice";
+
+const LIVE_VOICE_STEP_INDEXES = new Set([1, 2]);
 
 const WIZARD = {
-  completeVoice: {
-    en: "Great work. Your practice form is complete.",
-    hi: "बहुत अच्छा। आपका अभ्यास फॉर्म पूरा हो गया।",
-    kn: "ಚೆನ್ನಾಗಿದೆ. ನಿಮ್ಮ ಅಭ್ಯಾಸ ಫಾರ್ಮ್ ಪೂರ್ಣಗೊಂಡಿದೆ.",
-  },
   allDone: {
     en: "All steps completed",
     hi: "सभी चरण पूरे",
@@ -59,10 +56,16 @@ export function StepWizard({ templates }) {
   const currentStep = steps[stepIndex];
   const totalSteps = steps.length;
 
-  function announceStep(step) {
-    if (!prefs.voiceEnabled || !step) return;
-    const line = `${pickLang(step.label, language)}. ${pickLang(step.help, language)}`;
-    speak(line, { language: prefs.language });
+  function stepSpeechLine(step) {
+    if (!step) return "";
+    return `${pickLang(step.label, language)}. ${pickLang(step.help, language)}`;
+  }
+
+  function announceStep(index) {
+    if (!prefs.voiceEnabled || !LIVE_VOICE_STEP_INDEXES.has(index)) return;
+    const step = steps[index];
+    if (!step) return;
+    void speakSarvam(stepSpeechLine(step), { language: prefs.language });
   }
 
   function handleTemplateChange(id) {
@@ -83,26 +86,24 @@ export function StepWizard({ templates }) {
     const value = answers[currentStep.id]?.trim?.() ?? answers[currentStep.id];
     if (currentStep.required && !value) return;
 
+    stopSpeaking();
+
     if (stepIndex >= totalSteps - 1) {
       setCompleted(true);
-      if (prefs.voiceEnabled) {
-        speak(pickLang(WIZARD.completeVoice, language), {
-          language: prefs.language,
-        });
-      }
       return;
     }
 
     const nextIndex = stepIndex + 1;
     setStepIndex(nextIndex);
-    announceStep(steps[nextIndex]);
+    announceStep(nextIndex);
   }
 
   function goBack() {
     if (stepIndex === 0) return;
+    stopSpeaking();
     const prevIndex = stepIndex - 1;
     setStepIndex(prevIndex);
-    announceStep(steps[prevIndex]);
+    announceStep(prevIndex);
   }
 
   if (!template) return null;

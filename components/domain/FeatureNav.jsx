@@ -2,7 +2,7 @@
 
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { markFeatureVoiceIntent } from "@/components/voice/VoiceShell";
-import { playFeatureIntro } from "@/lib/voice";
+import { playFeatureIntro, stopSpeaking } from "@/lib/voice";
 import { pickLang } from "@/lib/i18n";
 
 const FEATURE_TITLES = {
@@ -51,6 +51,7 @@ export function FeatureNav({ features, domainKey, ariaLabel = "Features" }) {
   const language = prefs.language;
 
   function handleFeatureClick(feature) {
+    stopSpeaking();
     scrollToFeature(feature.id);
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", `#${feature.id}`);

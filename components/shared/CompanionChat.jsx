@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader2, SendHorizontal } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
+import { VoiceReplayButton } from "@/components/voice/VoiceReplayButton";
 import { COMPANION_PROMPTS } from "@/lib/companion";
 import { pickLang } from "@/lib/i18n";
-import { speak } from "@/lib/voice";
+import { speakSarvam } from "@/lib/voice";
 
 const CHAT = {
   you: { en: "You", hi: "आप", kn: "ನೀವು" },
@@ -32,8 +33,8 @@ const CHAT = {
   },
   placeholderGov: {
     en: "Example: What documents for income certificate?",
-    hi: "उदाहरण: income certificate के लिए कौन से documents?",
-    kn: "ಉದಾಹರಣೆ: income certificate ಗಾಗಿ ಯಾವ documents?",
+    hi: "उदाहरण: आय प्रमाण पत्र के लिए कौन से दस्तावेज़?",
+    kn: "ಉದಾಹರಣೆ: ಆದಾಯ ಪ್ರಮಾಣಪತ್ರಕ್ಕೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?",
   },
   placeholderBank: {
     en: "Example: How do I block my card?",
@@ -63,19 +64,34 @@ const CHAT = {
   },
 };
 
+function promptLabel(prompt, language) {
+  return typeof prompt === "string" ? prompt : pickLang(prompt, language);
+}
+
 function MessageBubble({ role, content, live = false, language }) {
   const isUser = role === "user";
 
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[92%] rounded-xl border border-[var(--ink)] px-4 py-3 text-sm leading-relaxed sm:max-w-[80%] sm:text-base ${
+        className={`relative max-w-[92%] rounded-xl border border-[var(--ink)] px-4 py-3 text-sm leading-relaxed sm:max-w-[80%] sm:text-base ${
           isUser
             ? "bg-[var(--blue)] text-white"
             : "bg-white text-[var(--ink)]"
         }`}
         aria-live={live ? "polite" : undefined}
       >
+        {!isUser && content?.trim() && (
+          <div className="absolute -top-2 -right-2 z-10">
+            <VoiceReplayButton
+              text={content}
+              language={language}
+              liveReplay
+              className="shadow-sm"
+            />
+          </div>
+        )}
+
         <p className="caption mb-1 text-[0.65rem] font-bold uppercase tracking-widest opacity-80">
           {isUser
             ? pickLang(CHAT.you, language)
@@ -156,8 +172,8 @@ export function CompanionChat({ domain = "gov" }) {
       setMessages([...nextMessages, { role: "assistant", content: assistantText }]);
       setStreamingText("");
 
-      if (prefs.voiceEnabled && assistantText) {
-        speak(assistantText, { language: prefs.language });
+      if (prefs.voiceEnabled && assistantText.trim()) {
+        void speakSarvam(assistantText, { language: prefs.language });
       }
     } catch (err) {
       setError(err.message || pickLang(CHAT.genericError, language));
@@ -173,17 +189,20 @@ export function CompanionChat({ domain = "gov" }) {
           {pickLang(CHAT.tryQuestion, language)}
         </p>
         <div className="flex flex-wrap gap-2">
-          {prompts.map((prompt) => (
-            <button
-              key={prompt}
-              type="button"
-              onClick={() => sendMessage(prompt)}
-              disabled={loading}
-              className="btn-ink bg-white px-3 py-1.5 text-left text-xs sm:text-sm"
-            >
-              {prompt}
-            </button>
-          ))}
+          {prompts.map((prompt) => {
+            const label = promptLabel(prompt, language);
+            return (
+              <button
+                key={label}
+                type="button"
+                onClick={() => sendMessage(label)}
+                disabled={loading}
+                className="btn-ink bg-white px-3 py-1.5 text-left text-xs sm:text-sm"
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -243,7 +262,7 @@ export function CompanionChat({ domain = "gov" }) {
         <button
           type="submit"
           disabled={loading || !input.trim()}
-          className="btn-ink inline-flex items-center justify-center gap-2 self-end px-5 py-2.5 text-sm text-white sm:self-auto"
+          className="btn-ink inline-flex items-center justify-center gap-1.5 self-end px-4 py-0.5 text-sm leading-none text-white sm:self-auto"
           style={{ backgroundColor: "var(--blue)" }}
         >
           {loading ? (

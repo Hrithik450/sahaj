@@ -15,6 +15,8 @@ import {
   readAccessabilityPrefs,
   writeAccessabilityPrefs,
 } from "@/lib/accessability";
+import { stopSpeaking } from "@/lib/voice";
+import { LANDING_FEATURES_VOICE_EVENT } from "@/lib/data/landing-features";
 const AccessabilityContext = createContext(null);
 
 function subscribe(callback) {
@@ -40,12 +42,23 @@ export function AccessabilityProvider({ children }) {
   const setNeed = useCallback((need) => updatePrefs({ need }), [updatePrefs]);
 
   const setLanguage = useCallback(
-    (language) => updatePrefs({ language }),
+    (language) => {
+      const current = readAccessabilityPrefs().language;
+      if (current !== language) {
+        stopSpeaking();
+      }
+      updatePrefs({ language });
+    },
     [updatePrefs],
   );
 
   const setVoiceEnabled = useCallback(
-    (voiceEnabled) => updatePrefs({ voiceEnabled }),
+    (voiceEnabled) => {
+      if (!voiceEnabled) {
+        stopSpeaking();
+      }
+      updatePrefs({ voiceEnabled });
+    },
     [updatePrefs],
   );
 
@@ -53,7 +66,9 @@ export function AccessabilityProvider({ children }) {
     if (!prefs.need) return false;
     updatePrefs({ setupComplete: true });
     document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
-
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent(LANDING_FEATURES_VOICE_EVENT));
+    }
     return true;
   }, [prefs.need, updatePrefs]);
 
