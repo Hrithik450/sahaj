@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { Camera, Loader2, Upload } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
+import { VoiceReplayButton } from "@/components/voice/VoiceReplayButton";
 import { pickLang } from "@/lib/i18n";
+import { extractTextFromImage } from "@/lib/ocr";
 import { speak } from "@/lib/voice";
 
 const SIMPLIFIER = {
   emptyError: {
-    en: "Paste a notice or choose a sample to simplify.",
-    hi: "सरलीकरण के लिए नोटिस चिपकाएं या नमूना चुनें।",
-    kn: "ಸರಳೀಕರಣಕ್ಕಾಗಿ ಸೂಚನೆ ಅಂಟಿಸಿ ಅಥವಾ ಮಾದರಿ ಆಯ್ಕೆಮಾಡಿ.",
+    en: "Paste a notice, upload a photo, or choose a sample to simplify.",
+    hi: "सरलीकरण के लिए नोटिस चिपकाएं, फोटो अपलोड करें या नमूना चुनें।",
+    kn: "ಸರಳೀಕರಣಕ್ಕಾಗಿ ಸೂಚನೆ ಅಂಟಿಸಿ, ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಅಥವಾ ಮಾದರಿ ಆಯ್ಕೆಮಾಡಿ.",
   },
   requestFailed: {
     en: "Simplify request failed.",
@@ -53,15 +55,52 @@ const SIMPLIFIER = {
     kn: "ಮುಂದೆ ಏನು ಮಾಡಬೇಕು",
   },
   warnings: { en: "Warnings", hi: "चेतावनी", kn: "ಎಚ್ಚರಿಕೆಗಳು" },
+  uploadPhoto: {
+    en: "Upload photo",
+    hi: "फोटो अपलोड करें",
+    kn: "ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
+  },
+  snapPhoto: {
+    en: "Snap photo",
+    hi: "फोटो लें",
+    kn: "ಫೋಟೋ ತೆಗೆಯಿರಿ",
+  },
+  readingPhoto: {
+    en: "Reading text from photo…",
+    hi: "फोटो से पाठ पढ़ा जा रहा है…",
+    kn: "ಫೋಟೋದಿಂದ ಪಠ್ಯ ಓದಲಾಗುತ್ತಿದೆ…",
+  },
+  ocrEmpty: {
+    en: "Could not read text from this image. Try a clearer photo.",
+    hi: "इस छवि से पाठ नहीं पढ़ा जा सका। स्पष्ट फोटो लें।",
+    kn: "ಈ ಚಿತ್ರದಿಂದ ಪಠ್ಯ ಓದಲಾಗಲಿಲ್ಲ. ಸ್ಪಷ್ಟ ಫೋಟೋ ತೆಗೆಯಿರಿ.",
+  },
+  ocrFailed: {
+    en: "Could not scan this image right now.",
+    hi: "अभी इस छवि को स्कैन नहीं कर सका।",
+    kn: "ಈಗ ಈ ಚಿತ್ರವನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಲಾಗಲಿಲ್ಲ.",
+  },
 };
+
+function formatSimplifierSpeech(result) {
+  const parts = [];
+  if (result.summary) parts.push(result.summary);
+  if (result.actions?.length) parts.push(...result.actions);
+  if (result.warnings?.length) parts.push(...result.warnings);
+  return parts.join(" ");
+}
 
 export function Simplifier({ domain, samples }) {
   const { prefs } = useAccessability();
   const language = prefs.language;
+  const fileRef = useRef(null);
+  const cameraRef = useRef(null);
   const [text, setText] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [scanning, setScanning] = useState(false);
   const [error, setError] = useState("");
+  const busy = loading || scanning;
 
   async function runSimplify(inputText = text) {
     if (!inputText.trim()) {
@@ -93,8 +132,9 @@ export function Simplifier({ domain, samples }) {
 
       setResult(data);
 
-      if (prefs.voiceEnabled && data.summary) {
-        speak(data.summary, { language: prefs.language });
+      if (prefs.voiceEnabled) {
+        const speech = formatSimplifierSpeech(data);
+        if (speech) speak(speech, { language: prefs.language });
       }
     } catch (err) {
       setError(err.message || pickLang(SIMPLIFIER.genericError, language));
@@ -109,6 +149,31 @@ export function Simplifier({ domain, samples }) {
     setResult(null);
     setError("");
   }
+
+  async function handleImage(file) {
+    if (!file) return;
+
+    setScanning(true);
+    setError("");
+    setResult(null);
+
+    try {
+      const extracted = await extractTextFromImage(file, language);
+      if (!extracted) {
+        setError(pickLang(SIMPLIFIER.ocrEmpty, language));
+        return;
+      }
+      setText(extracted);
+    } catch {
+      setError(pickLang(SIMPLIFIER.ocrFailed, language));
+    } finally {
+      setScanning(false);
+      if (fileRef.current) fileRef.current.value = "";
+      if (cameraRef.current) cameraRef.current.value = "";
+    }
+  }
+
+  const resultSpeech = result ? formatSimplifierSpeech(result) : "";
 
   return (
     <div className="grid gap-6">
@@ -131,9 +196,46 @@ export function Simplifier({ domain, samples }) {
       </div>
 
       <label className="grid gap-2">
-        <span className="caption text-sm font-semibold">
-          {pickLang(SIMPLIFIER.pasteLabel, language)}
-        </span>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="caption text-sm font-semibold">
+            {pickLang(SIMPLIFIER.pasteLabel, language)}
+          </span>
+          <div className="flex flex-wrap gap-2">
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(event) => handleImage(event.target.files?.[0])}
+            />
+            <input
+              ref={cameraRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={(event) => handleImage(event.target.files?.[0])}
+            />
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => fileRef.current?.click()}
+              className="btn-ink inline-flex items-center gap-1.5 bg-white px-3 py-1.5 text-xs sm:text-sm"
+            >
+              <Upload className="h-3.5 w-3.5" aria-hidden />
+              {pickLang(SIMPLIFIER.uploadPhoto, language)}
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => cameraRef.current?.click()}
+              className="btn-ink inline-flex items-center gap-1.5 bg-white px-3 py-1.5 text-xs sm:text-sm"
+            >
+              <Camera className="h-3.5 w-3.5" aria-hidden />
+              {pickLang(SIMPLIFIER.snapPhoto, language)}
+            </button>
+          </div>
+        </div>
         <textarea
           value={text}
           onChange={(event) => setText(event.target.value)}
@@ -143,10 +245,16 @@ export function Simplifier({ domain, samples }) {
         />
       </label>
 
+      {scanning && (
+        <p className="text-sm" style={{ color: "var(--muted)" }}>
+          {pickLang(SIMPLIFIER.readingPhoto, language)}
+        </p>
+      )}
+
       <button
         type="button"
         onClick={() => runSimplify()}
-        disabled={loading}
+        disabled={busy}
         className="btn-ink inline-flex items-center justify-center gap-2 self-start px-6 py-2.5 text-sm text-white"
         style={{ backgroundColor: "var(--blue)" }}
       >
@@ -162,14 +270,13 @@ export function Simplifier({ domain, samples }) {
 
       {result && (
         <div className="grid gap-4 rounded-xl border border-[var(--ink)] bg-[var(--cream)] p-4 sm:p-5">
-          <div>
+          <div className="flex items-start justify-between gap-3">
             <p className="caption text-xs font-bold uppercase tracking-widest">
               {pickLang(SIMPLIFIER.plainSummary, language)}
             </p>
-            <p className="mt-2 text-sm leading-relaxed sm:text-base">
-              {result.summary}
-            </p>
+            <VoiceReplayButton text={resultSpeech} language={language} />
           </div>
+          <p className="text-sm leading-relaxed sm:text-base">{result.summary}</p>
 
           {result.actions?.length > 0 && (
             <div>

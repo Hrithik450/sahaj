@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "drizzle-kit push",
-    "generate:voice-audio": "node --env-file=.env.local scripts/generate-voice-audio.mjs"
+    "generate:voice-audio": "node --env-file=.env.local scripts/generate-voice-audio.mjs",
+    "generate:natural-voice": "node --env-file=.env.local scripts/generate-voice-audio.mjs --natural --force"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -17,7 +18,8 @@
     "next": "16.3.2",
     "next-auth": "^5.0.0-beta.32",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tesseract.js": "^6.0.1"
   },
   "overrides": {
     "eslint-plugin-jsx-accessability": "npm:eslint-plugin-jsx-a11y@^6.10.2"

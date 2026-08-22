@@ -1,6 +1,8 @@
 "use client";
 
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
+import { markFeatureVoiceIntent } from "@/components/voice/VoiceShell";
+import { playFeatureIntro } from "@/lib/voice";
 import { pickLang } from "@/lib/i18n";
 
 const FEATURE_TITLES = {
@@ -48,6 +50,18 @@ export function FeatureNav({ features, domainKey, ariaLabel = "Features" }) {
   const { prefs } = useAccessability();
   const language = prefs.language;
 
+  function handleFeatureClick(feature) {
+    scrollToFeature(feature.id);
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", `#${feature.id}`);
+    }
+    if (prefs.voiceEnabled) {
+      playFeatureIntro(domainKey, feature.id, language);
+    } else {
+      markFeatureVoiceIntent(domainKey, feature.id);
+    }
+  }
+
   return (
     <nav
       className="flex flex-nowrap gap-4 overflow-x-auto scroll-smooth py-8 pb-4 sm:gap-5 lg:flex-wrap lg:overflow-visible lg:pb-8"
@@ -57,7 +71,7 @@ export function FeatureNav({ features, domainKey, ariaLabel = "Features" }) {
         <button
           key={feature.id}
           type="button"
-          onClick={() => scrollToFeature(feature.id)}
+          onClick={() => handleFeatureClick(feature)}
           className="sticker-label ink-lift shrink-0 rounded-[1.75rem] border border-[var(--ink)] bg-transparent px-5 py-3 text-left shadow-[-1.5px_1.5px_0_0_var(--ink)] sm:px-6"
         >
           <span className="block leading-tight">

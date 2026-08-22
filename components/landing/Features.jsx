@@ -15,6 +15,7 @@ import {
   DEFAULT_FEATURE_DOMAIN,
   FEATURE_DOMAINS,
 } from "@/lib/data/features";
+import { markFeatureVoiceIntent } from "@/components/voice/VoiceShell";
 import { pickLang } from "@/lib/i18n";
 
 import {
@@ -219,6 +220,7 @@ function FeatureCard({ feature, index, domainHref, domain, language }) {
 
         <Link
           href={`${domainHref}#${feature.id}`}
+          onClick={() => markFeatureVoiceIntent(domain, feature.id)}
           className="btn-ink mt-5 bg-white px-5 py-2 text-sm"
         >
           {pickLang(FEATURES.learnMore, language)}
