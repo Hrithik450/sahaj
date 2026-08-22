@@ -2,8 +2,8 @@
 
 import { Volume2 } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { pickLang } from "@/lib/i18n";
-import { playSampleSimplifierSpeech, speakSarvam } from "@/lib/voice";
+import { pickLang } from "@/lib/utils";
+import { playSampleSimplifierSpeech, speakSarvam } from "@/lib/tts/voice";
 
 const LABEL = {
   en: "Listen again",

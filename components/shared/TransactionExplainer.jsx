@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { BANK_TRANSACTIONS } from "@/lib/data/bank/transactions";
-import { pickLang } from "@/lib/i18n";
-import { speakSarvam } from "@/lib/voice";
+import { BANK_TRANSACTIONS } from "@/lib/features";
+import { pickLang } from "@/lib/utils";
+import { speakSarvam } from "@/lib/tts/voice";
 
 const EXPLAINER = {
   emptyError: {

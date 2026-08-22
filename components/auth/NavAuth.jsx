@@ -4,7 +4,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { LogIn, LogOut } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { pickLang } from "@/lib/i18n";
+import { pickLang } from "@/lib/utils";
 
 const NAV_AUTH = {
   signIn: { en: "Sign in", hi: "साइन इन", kn: "ಸೈನ್ ಇನ್" },

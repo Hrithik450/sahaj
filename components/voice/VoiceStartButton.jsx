@@ -1,7 +1,7 @@
 "use client";
 
 import { Volume2 } from "lucide-react";
-import { registerOnboardingTarget } from "@/lib/onboarding-targets";
+import { registerOnboardingTarget } from "@/lib/utils";
 import { useVoiceControl } from "@/components/voice/VoiceShell";
 
 export function VoiceStartButton() {

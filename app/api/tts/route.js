@@ -1,5 +1,5 @@
-import { synthesizeSarvamSpeech } from "@/lib/sarvam-tts";
-import { sanitizeTextForSpeech } from "@/lib/speech-text";
+import { synthesizeSarvamSpeech } from "@/lib/tts/sarvam-tts";
+import { sanitizeTextForSpeech } from "@/lib/tts/speech-text";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";

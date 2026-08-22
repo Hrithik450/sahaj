@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { Camera, Loader2, Upload } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { VoiceReplayButton } from "@/components/voice/VoiceReplayButton";
-import { formatSimplifierSpeech } from "@/lib/data/simplifier-speech";
-import { pickLang } from "@/lib/i18n";
-import { extractTextFromImage } from "@/lib/ocr";
-import { playSampleSimplifierSpeech, speakSarvam } from "@/lib/voice";
+import { formatSimplifierSpeech } from "@/lib/tts/simplifier-speech";
+import { pickLang } from "@/lib/utils";
+import { extractTextFromImage } from "@/lib/utils";
+import { playSampleSimplifierSpeech, speakSarvam } from "@/lib/tts/voice";
 
 const SIMPLIFIER = {
   emptyError: {

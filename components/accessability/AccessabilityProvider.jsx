@@ -14,9 +14,9 @@ import {
   DEFAULT_ACCESSABILITY_PREFS,
   readAccessabilityPrefs,
   writeAccessabilityPrefs,
-} from "@/lib/accessability";
-import { stopSpeaking } from "@/lib/voice";
-import { LANDING_FEATURES_VOICE_EVENT } from "@/lib/data/landing-features";
+} from "@/lib/utils";
+import { stopSpeaking } from "@/lib/tts/voice";
+import { LANDING_FEATURES_VOICE_EVENT } from "@/lib/features";
 const AccessabilityContext = createContext(null);
 
 function subscribe(callback) {

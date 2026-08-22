@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { GOV_SERVICES } from "@/lib/data/gov/services";
-import { pickLang } from "@/lib/i18n";
-import { speakSarvam } from "@/lib/voice";
+import { GOV_SERVICES } from "@/lib/features";
+import { pickLang } from "@/lib/utils";
+import { speakSarvam } from "@/lib/tts/voice";
 
 const FRAUD_DISTRACTORS = [
   {

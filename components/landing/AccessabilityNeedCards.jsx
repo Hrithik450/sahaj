@@ -2,8 +2,8 @@
 
 import { ALargeSmall, ListOrdered, Volume2 } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { ACCESSIBILITY_NEEDS } from "@/lib/data/accessability-needs";
-import { pickLang } from "@/lib/i18n";
+import { ACCESSIBILITY_NEEDS } from "@/lib/utils";
+import { pickLang } from "@/lib/utils";
 
 const NEEDS = {
   heading: {

@@ -3,16 +3,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { VoiceReplayButton } from "@/components/voice/VoiceReplayButton";
-import { GOV_SERVICES } from "@/lib/data/gov/services";
+import { GOV_SERVICES } from "@/lib/features";
 import {
   servicePortalHost,
   servicePortalPath,
   servicePortalSteps,
   servicePortalVoice,
-} from "@/lib/data/gov/service-portal";
-import { matchGovServices } from "@/lib/finder";
-import { pickLang } from "@/lib/i18n";
-import { speakSarvam, stopSpeaking } from "@/lib/voice";
+} from "@/lib/features";
+import { matchGovServices } from "@/lib/utils";
+import { pickLang } from "@/lib/utils";
+import { speakSarvam, stopSpeaking } from "@/lib/tts/voice";
 
 const EXAMPLE_QUERIES = [
   {

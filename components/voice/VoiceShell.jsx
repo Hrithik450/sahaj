@@ -10,7 +10,7 @@ import {
   playHeroIntro,
   stopSpeaking,
   unlockVoice,
-} from "@/lib/voice";
+} from "@/lib/tts/voice";
 
 const NAV_VOICE_KEY = "sahaj-nav-voice";
 const FEATURE_VOICE_KEY = "sahaj-feature-voice";

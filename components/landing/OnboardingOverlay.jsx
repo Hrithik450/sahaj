@@ -9,8 +9,8 @@ import {
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { getOnboardingTarget } from "@/lib/onboarding-targets";
-import { pickLang } from "@/lib/i18n";
+import { getOnboardingTarget } from "@/lib/utils";
+import { pickLang } from "@/lib/utils";
 
 const SPOT_PAD = 10;
 const TIP_WIDTH = 272;

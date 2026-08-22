@@ -20,9 +20,9 @@ import {
   LANDING_FEATURE_COPY,
   LANDING_FEATURES_UI,
   LANDING_FEATURES_VOICE_EVENT,
-} from "@/lib/data/landing-features";
-import { pickLang } from "@/lib/i18n";
-import { playLandingGovernmentFeaturesIntro } from "@/lib/voice";
+} from "@/lib/features";
+import { pickLang } from "@/lib/utils";
+import { playLandingGovernmentFeaturesIntro } from "@/lib/tts/voice";
 
 const FEATURE_ICONS = {
   simplify: FileText,

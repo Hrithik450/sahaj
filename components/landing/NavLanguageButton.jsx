@@ -1,8 +1,8 @@
 "use client";
 
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { registerOnboardingTarget } from "@/lib/onboarding-targets";
-import { LANGUAGES } from "@/lib/data/languages";
+import { registerOnboardingTarget } from "@/lib/utils";
+import { LANGUAGES } from "@/lib/utils";
 
 const LANGUAGE_SHORT = {
   en: "En",

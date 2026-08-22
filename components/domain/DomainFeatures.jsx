@@ -8,19 +8,18 @@ import { ServiceFinder } from "@/components/shared/ServiceFinder";
 import { TransactionExplainer } from "@/components/shared/TransactionExplainer";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { FeatureSection } from "@/components/domain/FeatureSection";
-import { DOMAIN as BANKING_DOMAIN } from "@/lib/data/pages/banking/features";
-import { DOMAIN as GOVERNMENT_DOMAIN } from "@/lib/data/pages/government/features";
-import { BANK_NOTICES } from "@/lib/data/bank/notices";
-import { BANK_PRACTICE } from "@/lib/data/bank/practice";
-import { BANK_TASKS } from "@/lib/data/bank/tasks";
-import { GOV_FORMS } from "@/lib/data/gov/forms";
-import { GOV_NOTICES } from "@/lib/data/gov/notices";
-import { GOV_PRACTICE } from "@/lib/data/gov/practice";
-import { pickLang } from "@/lib/i18n";
+import { bankingPage, governmentPage } from "@/lib/features";
+import { BANK_NOTICES } from "@/lib/features";
+import { BANK_PRACTICE } from "@/lib/features";
+import { BANK_TASKS } from "@/lib/features";
+import { GOV_FORMS } from "@/lib/features";
+import { GOV_NOTICES } from "@/lib/features";
+import { GOV_PRACTICE } from "@/lib/features";
+import { pickLang } from "@/lib/utils";
 
 const DOMAIN = {
-  government: GOVERNMENT_DOMAIN,
-  banking: BANKING_DOMAIN,
+  government: governmentPage.DOMAIN,
+  banking: bankingPage.DOMAIN,
 };
 
 function FeatureBody({ feature, domain }) {

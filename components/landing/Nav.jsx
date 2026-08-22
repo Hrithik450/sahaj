@@ -9,8 +9,8 @@ import { Logo } from "@/components/brand/Logo";
 import { NavLanguageButton } from "@/components/landing/NavLanguageButton";
 import { markNavVoiceIntent } from "@/components/voice/VoiceShell";
 import { VoiceStartButton } from "@/components/voice/VoiceStartButton";
-import { pickLang } from "@/lib/i18n";
-import { stopSpeaking } from "@/lib/voice";
+import { pickLang } from "@/lib/utils";
+import { stopSpeaking } from "@/lib/tts/voice";
 
 const NAV = {
   home: { en: "Home", hi: "होम", kn: "ಮುಖಪುಟ" },

@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { pickLang } from "@/lib/i18n";
-import { speakSarvam, stopSpeaking } from "@/lib/voice";
+import { pickLang } from "@/lib/utils";
+import { speakSarvam, stopSpeaking } from "@/lib/tts/voice";
 
 const LIVE_VOICE_STEP_INDEXES = new Set([1, 2]);
 

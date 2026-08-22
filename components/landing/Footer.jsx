@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { Logo } from "@/components/brand/Logo";
-import { pickLang } from "@/lib/i18n";
+import { pickLang } from "@/lib/utils";
 import { SITE } from "@/lib/site";
 
 const FOOTER = {

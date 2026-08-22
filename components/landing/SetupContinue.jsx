@@ -2,7 +2,7 @@
 
 import { ArrowRight, Lock } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import { pickLang } from "@/lib/i18n";
+import { pickLang } from "@/lib/utils";
 import { SITE } from "@/lib/site";
 
 const SETUP = {

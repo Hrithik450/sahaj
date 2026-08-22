@@ -6,7 +6,7 @@ import { useAccessability } from "@/components/accessability/AccessabilityProvid
 import {
   readAccessabilityPrefs,
   writeAccessabilityPrefs,
-} from "@/lib/accessability";
+} from "@/lib/utils";
 
 export function ProfileSync() {
   const { data: session, status } = useSession();

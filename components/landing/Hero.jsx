@@ -3,7 +3,7 @@
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { AccessabilitySetup } from "@/components/landing/AccessabilitySetup";
 import { HeroIllustration } from "@/components/landing/HeroIllustration";
-import { pickLang } from "@/lib/i18n";
+import { pickLang } from "@/lib/utils";
 import { SITE } from "@/lib/site";
 
 const HOME = {

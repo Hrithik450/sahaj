@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { Loader2, SendHorizontal } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { VoiceReplayButton } from "@/components/voice/VoiceReplayButton";
-import { COMPANION_PROMPTS } from "@/lib/companion";
-import { pickLang } from "@/lib/i18n";
-import { speakSarvam } from "@/lib/voice";
+import { COMPANION_PROMPTS } from "@/lib/utils";
+import { pickLang } from "@/lib/utils";
+import { speakSarvam } from "@/lib/tts/voice";
 
 const CHAT = {
   you: { en: "You", hi: "आप", kn: "ನೀವು" },

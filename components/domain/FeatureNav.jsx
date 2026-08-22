@@ -2,8 +2,8 @@
 
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { markFeatureVoiceIntent } from "@/components/voice/VoiceShell";
-import { playFeatureIntro, stopSpeaking } from "@/lib/voice";
-import { pickLang } from "@/lib/i18n";
+import { playFeatureIntro, stopSpeaking } from "@/lib/tts/voice";
+import { pickLang } from "@/lib/utils";
 
 const FEATURE_TITLES = {
   government: {
