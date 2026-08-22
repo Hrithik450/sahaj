@@ -7,7 +7,6 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { getOnboardingTarget } from "@/lib/utils";
 import { pickLang } from "@/lib/utils";
@@ -297,9 +296,8 @@ export function OnboardingOverlay() {
       ].map((style, i) => (
         <div
           key={i}
-          className="fixed z-[200] cursor-pointer"
+          className="fixed z-[200]"
           style={style}
-          onClick={skipOverlay}
         />
       ))}
 
@@ -330,15 +328,6 @@ export function OnboardingOverlay() {
           className="relative rounded-2xl border border-black/[0.07] bg-white p-5"
           style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.18)" }}
         >
-          <button
-            type="button"
-            className="absolute top-3.5 right-3.5 rounded-full p-1 transition-colors hover:bg-gray-100"
-            onClick={skipOverlay}
-            aria-label="Dismiss onboarding"
-          >
-            <X className="h-3.5 w-3.5 text-gray-400" />
-          </button>
-
           <p
             className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest"
             style={{ color: "var(--blue)" }}

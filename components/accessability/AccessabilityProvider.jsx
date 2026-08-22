@@ -15,7 +15,7 @@ import {
   readAccessabilityPrefs,
   writeAccessabilityPrefs,
 } from "@/lib/utils";
-import { stopSpeaking } from "@/lib/tts/voice";
+import { stopSpeaking, unlockVoice } from "@/lib/tts/voice";
 import { LANDING_FEATURES_VOICE_EVENT } from "@/lib/features";
 const AccessabilityContext = createContext(null);
 
@@ -39,17 +39,26 @@ export function AccessabilityProvider({ children }) {
     writeAccessabilityPrefs({ ...readAccessabilityPrefs(), ...partial });
   }, []);
 
-  const setNeed = useCallback((need) => updatePrefs({ need }), [updatePrefs]);
+  const setNeed = useCallback(
+    (need) => {
+      const updates = { need };
+      if (need === "hearing") {
+        updates.voiceEnabled = true;
+        unlockVoice();
+      }
+      updatePrefs(updates);
+    },
+    [updatePrefs],
+  );
 
   const setLanguage = useCallback(
     (language) => {
-      const current = readAccessabilityPrefs().language;
-      if (current !== language) {
+      if (prefs.language !== language) {
         stopSpeaking();
       }
       updatePrefs({ language });
     },
-    [updatePrefs],
+    [prefs.language, updatePrefs],
   );
 
   const setVoiceEnabled = useCallback(
