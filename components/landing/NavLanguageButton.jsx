@@ -6,6 +6,7 @@ import { LANGUAGES } from "@/lib/data/languages";
 const LANGUAGE_SHORT = {
   en: "En",
   kn: "ಕ",
+  hi: "हिं",
 };
 
 export function NavLanguageButton() {

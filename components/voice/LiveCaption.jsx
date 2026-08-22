@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { VOICE_CAPTION_EVENT } from "@/lib/voice";
 
 export function LiveCaption() {
+  const pathname = usePathname();
   const [text, setText] = useState("");
 
   useEffect(() => {
@@ -15,7 +17,7 @@ export function LiveCaption() {
     return () => window.removeEventListener(VOICE_CAPTION_EVENT, handleCaption);
   }, []);
 
-  if (!text) return null;
+  if (pathname === "/" || !text) return null;
 
   return (
     <div

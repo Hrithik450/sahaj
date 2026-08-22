@@ -17,22 +17,12 @@ import {
 } from "@/lib/data/features";
 import { pickLang } from "@/lib/i18n";
 
+import {
+  FEATURES_SECTION_LABEL,
+  FEATURES_SECTION_TITLE,
+} from "@/lib/data/features-voice";
+
 const FEATURES = {
-  sectionLabel: {
-    en: "What Sahaj offers",
-    hi: "सहज क्या प्रदान करता है",
-    kn: "ಸಹಜ ಏನು ನೀಡುತ್ತದೆ",
-  },
-  sectionTitleLine1: {
-    en: "Five ways to finish",
-    hi: "पांच तरीके पूरा करने के",
-    kn: "ಪೂರ್ಣಗೊಳಿಸಲು ಐದು ಮಾರ್ಗಗಳು",
-  },
-  sectionTitleLine2: {
-    en: "government and banking tasks",
-    hi: "सरकारी और बैंकिंग कार्य",
-    kn: "ಸರ್ಕಾರಿ ಮತ್ತು ಬ್ಯಾಂಕಿಂಗ್ ಕೆಲಸಗಳು",
-  },
   learnMore: { en: "Learn more", hi: "और जानें", kn: "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ" },
   scrollLeft: {
     en: "Scroll features left",
@@ -264,12 +254,10 @@ export function Features() {
         <div className="mb-12 flex flex-col gap-6 sm:mb-14 sm:flex-row sm:items-end sm:justify-between lg:mb-16">
           <div>
             <p className="caption mb-2 text-xs font-semibold uppercase tracking-widest">
-              {pickLang(FEATURES.sectionLabel, language)}
+              {pickLang(FEATURES_SECTION_LABEL, language)}
             </p>
             <h2 className="landing-strong max-w-[28rem] text-[clamp(1.6rem,3.5vw,2.25rem)] leading-[1.15] sm:max-w-[34rem] lg:max-w-[40rem]">
-              {pickLang(FEATURES.sectionTitleLine1, language)}
-              <br />
-              {pickLang(FEATURES.sectionTitleLine2, language)}
+              {pickLang(FEATURES_SECTION_TITLE, language)}
             </h2>
           </div>
 

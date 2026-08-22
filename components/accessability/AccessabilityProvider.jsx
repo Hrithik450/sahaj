@@ -15,6 +15,7 @@ import {
   readAccessabilityPrefs,
   writeAccessabilityPrefs,
 } from "@/lib/accessability";
+import { playGovernmentFeaturesIntro } from "@/lib/voice";
 
 const AccessabilityContext = createContext(null);
 
@@ -54,8 +55,15 @@ export function AccessabilityProvider({ children }) {
     if (!prefs.need) return false;
     updatePrefs({ setupComplete: true });
     document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+
+    if (prefs.voiceEnabled) {
+      window.setTimeout(() => {
+        playGovernmentFeaturesIntro(prefs.language);
+      }, 500);
+    }
+
     return true;
-  }, [prefs.need, updatePrefs]);
+  }, [prefs.need, prefs.voiceEnabled, prefs.language, updatePrefs]);
 
   const value = useMemo(
     () => ({

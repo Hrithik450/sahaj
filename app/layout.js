@@ -17,18 +17,6 @@ export const metadata = {
     template: `%s · ${SITE.name}`,
   },
   description: SITE.description,
-  openGraph: {
-    type: "website",
-    locale: SITE.locale,
-    siteName: SITE.name,
-    title: SITE.title,
-    description: SITE.description,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: SITE.title,
-    description: SITE.description,
-  },
 };
 
 export default function RootLayout({ children }) {
