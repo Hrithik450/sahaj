@@ -4,6 +4,10 @@ Sahaj is an accessibility-first hackathon project that makes **government** and 
 
 It combines **plain-language AI**, **voice guidance**, **OCR for notices**, and **multilingual support** to help users complete important tasks with more confidence.
 
+<video src="./public/video/sahaj.mp4" controls muted playsinline>
+  Your browser does not support the video tag.
+</video>
+
 ## What it does
 
 - Simplifies government and banking notices into clear next steps
