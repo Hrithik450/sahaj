@@ -4,9 +4,9 @@ Sahaj is an accessibility-first hackathon project that makes **government** and 
 
 It combines **plain-language AI**, **voice guidance**, **OCR for notices**, and **multilingual support** to help users complete important tasks with more confidence.
 
-## Demo Video
-
 ![Sahaj demo preview](https://res.cloudinary.com/duozomapm/image/upload/v1787401081/Screenshot_2026-08-22_at_17.46.53_dk74rp.png)
+
+## Demo Video
 
 [Watch the demo on Google Drive](https://drive.google.com/file/d/1EqdlHkMBerTZQNd9RnZoe8F0n8xrkcfe)
 
