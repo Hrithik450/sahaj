@@ -4,9 +4,7 @@ import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
-import {
-  isSimplifyGateLogin,
-} from "@/lib/routes";
+import { isSimplifyGateLogin } from "@/lib/routes";
 import {
   playSignInRequiredIntro,
   speakSarvam,
@@ -56,9 +54,9 @@ const LOGIN_UI = {
     kn: "Google ನೊಂದಿಗೆ ಮುಂದುವರಿಯಿರಿ",
   },
   optionalVoice: {
-    en: "You can keep using Sahaj without signing in. If you want your accessibility choices saved across devices, sign in with Google below — it only takes a moment.",
-    hi: "बिना साइन इन के भी सहज इस्तेमाल कर सकते हैं। अगर आपकी सुलभता सेटिंग सभी डिवाइस पर सहेजना है, तो नीचे Google से साइन इन करें — बस एक पल लगेगा।",
-    kn: "ಸೈನ್ ಇನ್ ಇಲ್ಲದೆಯೂ ಸಹಜ ಬಳಸಬಹುದು. ನಿಮ್ಮ ಸುಲಭತೆ ಆಯ್ಕೆಗಳನ್ನು ಎಲ್ಲಾ ಡಿವೈಸ್‌ಗಳಲ್ಲಿ ಉಳಿಸಬೇಕಾದರೆ, ಕೆಳಗೆ Google ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ — ಒಂದು ಕ್ಷಣ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ.",
+    en: "You can keep using Sahaj without signing in. If you want your accessibility choices saved across devices, sign in with Google below  it only takes a moment.",
+    hi: "बिना साइन इन के भी सहज इस्तेमाल कर सकते हैं। अगर आपकी सुलभता सेटिंग सभी डिवाइस पर सहेजना है, तो नीचे Google से साइन इन करें  बस एक पल लगेगा।",
+    kn: "ಸೈನ್ ಇನ್ ಇಲ್ಲದೆಯೂ ಸಹಜ ಬಳಸಬಹುದು. ನಿಮ್ಮ ಸುಲಭತೆ ಆಯ್ಕೆಗಳನ್ನು ಎಲ್ಲಾ ಡಿವೈಸ್‌ಗಳಲ್ಲಿ ಉಳಿಸಬೇಕಾದರೆ, ಕೆಳಗೆ Google ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ  ಒಂದು ಕ್ಷಣ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ.",
   },
   pageTitleFeature: {
     en: "Sign in to continue",
