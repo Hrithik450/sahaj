@@ -1,8 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
+import { getOnboardingTarget } from "@/lib/onboarding-targets";
 import { pickLang } from "@/lib/i18n";
 
 const SPOT_PAD = 10;
@@ -57,11 +64,21 @@ function getViewportWidth() {
   return window.visualViewport?.width ?? window.innerWidth;
 }
 
+function readTargetRect(el) {
+  const box = el.getBoundingClientRect();
+  return {
+    top: box.top,
+    left: box.left,
+    width: box.width,
+    height: box.height,
+    right: box.right,
+  };
+}
+
 function getTooltipStyle(rect) {
   const top = rect.top + rect.height + SPOT_PAD + 18;
-  const buttonCenter = rect.left + rect.width / 2;
   const viewportWidth = getViewportWidth();
-  let left = buttonCenter - TIP_WIDTH / 2;
+  let left = rect.left + rect.width / 2 - TIP_WIDTH / 2;
 
   left = Math.max(
     TIP_MARGIN,
@@ -91,7 +108,16 @@ function getInitialOverlay() {
   return languageOverlay;
 }
 
+function useIsClient() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+}
+
 export function OnboardingOverlay() {
+  const isClient = useIsClient();
   const { prefs } = useAccessability();
   const language = prefs.language;
 
@@ -103,26 +129,71 @@ export function OnboardingOverlay() {
   const [activeOverlay, setActiveOverlay] = useState(getInitialOverlay);
   const [rect, setRect] = useState(null);
   const [rectTargetId, setRectTargetId] = useState(null);
+  const [settledTargetId, setSettledTargetId] = useState(null);
 
   const visible = !persistentlyDismissed;
   const rectReady = rect && rectTargetId === activeOverlay.targetId;
+  const positionSettled = settledTargetId === activeOverlay.targetId;
 
   const measure = useCallback(() => {
     const targetId = activeOverlay.targetId;
-    const el = document.getElementById(targetId);
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    setRect({
-      top: r.top,
-      left: r.left,
-      width: r.width,
-      height: r.height,
+    const el = getOnboardingTarget(targetId);
+    if (!el) return false;
+
+    const next = readTargetRect(el);
+    setRect((prev) => {
+      if (
+        prev &&
+        prev.top === next.top &&
+        prev.left === next.left &&
+        prev.width === next.width &&
+        prev.height === next.height
+      ) {
+        return prev;
+      }
+      return next;
     });
     setRectTargetId(targetId);
+    return true;
   }, [activeOverlay.targetId]);
 
   useEffect(() => {
     if (!visible) return;
+
+    let cancelled = false;
+    let raf = 0;
+    let stable = 0;
+
+    const waitForTarget = async () => {
+      await document.fonts?.ready;
+
+      const tick = () => {
+        if (cancelled) return;
+
+        const found = measure();
+        stable = found ? stable + 1 : 0;
+
+        if (stable >= 2) {
+          setSettledTargetId(activeOverlay.targetId);
+          return;
+        }
+
+        raf = requestAnimationFrame(tick);
+      };
+
+      raf = requestAnimationFrame(tick);
+    };
+
+    waitForTarget();
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+    };
+  }, [visible, measure, activeOverlay.targetId]);
+
+  useEffect(() => {
+    if (!visible || !positionSettled) return;
 
     let raf = 0;
 
@@ -133,7 +204,7 @@ export function OnboardingOverlay() {
 
     scheduleMeasure();
 
-    const el = document.getElementById(activeOverlay.targetId);
+    const el = getOnboardingTarget(activeOverlay.targetId);
     const navActions = document.getElementById("nav-actions");
     const resizeObserver =
       typeof ResizeObserver !== "undefined"
@@ -156,7 +227,7 @@ export function OnboardingOverlay() {
       window.visualViewport?.removeEventListener("resize", scheduleMeasure);
       window.visualViewport?.removeEventListener("scroll", scheduleMeasure);
     };
-  }, [visible, measure, activeOverlay.targetId]);
+  }, [visible, positionSettled, measure, activeOverlay.targetId]);
 
   const dismiss = useCallback(() => {
     localStorage.setItem(STORAGE_KEY, "1");
@@ -166,6 +237,8 @@ export function OnboardingOverlay() {
 
   const goToSpeakerOverlay = useCallback(() => {
     localStorage.setItem(STEP_KEY, "speaker");
+    setRect(null);
+    setRectTargetId(null);
     setActiveOverlay(speakerOverlay);
   }, []);
 
@@ -180,7 +253,7 @@ export function OnboardingOverlay() {
   useEffect(() => {
     if (!visible || !rectReady) return;
 
-    const el = document.getElementById(activeOverlay.targetId);
+    const el = getOnboardingTarget(activeOverlay.targetId);
     if (!el) return;
 
     const proceed = () => {
@@ -195,7 +268,7 @@ export function OnboardingOverlay() {
     return () => el.removeEventListener("click", proceed);
   }, [visible, rectReady, activeOverlay, dismiss, goToSpeakerOverlay]);
 
-  if (!visible || !rectReady) return null;
+  if (!isClient || !visible || !rectReady || !positionSettled) return null;
 
   const spotTop = rect.top - SPOT_PAD;
   const spotLeft = rect.left - SPOT_PAD;
@@ -204,7 +277,7 @@ export function OnboardingOverlay() {
   const spotBR = spotHeight / 2;
   const tooltip = getTooltipStyle(rect);
 
-  return (
+  return createPortal(
     <div>
       {[
         { top: 0, left: 0, right: 0, height: Math.max(spotTop, 0) },
@@ -280,6 +353,7 @@ export function OnboardingOverlay() {
           </p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

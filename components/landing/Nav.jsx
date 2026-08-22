@@ -103,8 +103,8 @@ export function Nav() {
           className="flex shrink-0 items-center justify-end gap-1.5 sm:col-start-3 sm:gap-3"
           id="nav-actions"
         >
-          <VoiceStartButton />
           <NavLanguageButton />
+          <VoiceStartButton />
           <NavAuth />
         </div>
       </div>
