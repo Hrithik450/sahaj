@@ -10,6 +10,6 @@ const OnboardingOverlay = dynamic(
   { ssr: false },
 );
 
-export function ClientOnboardingOverlay() {
+export function Overlay() {
   return <OnboardingOverlay />;
 }

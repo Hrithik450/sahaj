@@ -1,4 +1,4 @@
-import { auth } from "@/lib/utils";
+import { auth } from "@/lib/auth";
 import {
   getProfileByUserId,
   profileRowToPrefs,

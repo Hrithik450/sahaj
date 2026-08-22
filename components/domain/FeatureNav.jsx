@@ -1,7 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { markFeatureVoiceIntent } from "@/components/voice/VoiceShell";
+import { buildLoginUrlForFeature } from "@/lib/routes";
 import { playFeatureIntro, stopSpeaking } from "@/lib/tts/voice";
 import { pickLang } from "@/lib/utils";
 
@@ -12,7 +15,11 @@ const FEATURE_TITLES = {
       hi: "दस्तावेज़ सरलीकरण",
       kn: "ದಾಖಲೆ ಸರಳೀಕರಣ",
     },
-    form: { en: "Guided Form", hi: "मार्गदर्शित फॉर्म", kn: "ಮಾರ್ಗದರ್ಶಿತ ಫಾರ್ಮ್" },
+    form: {
+      en: "Guided Form",
+      hi: "मार्गदर्शित फॉर्म",
+      kn: "ಮಾರ್ಗದರ್ಶಿತ ಫಾರ್ಮ್",
+    },
     finder: { en: "Service Finder", hi: "सेवा खोज", kn: "ಸೇವೆ ಹುಡುಕಾಟ" },
     companion: { en: "Voice Companion", hi: "आवाज़ साथी", kn: "ಧ್ವನಿ ಸಂಗಾತಿ" },
     practice: { en: "Practice Mode", hi: "अभ्यास मोड", kn: "ಅಭ್ಯಾಸ ವಿಧಾನ" },
@@ -48,10 +55,20 @@ function scrollToFeature(id) {
 
 export function FeatureNav({ features, domainKey, ariaLabel = "Features" }) {
   const { prefs } = useAccessability();
+  const { status: sessionStatus } = useSession();
+  const router = useRouter();
   const language = prefs.language;
 
   function handleFeatureClick(feature) {
     stopSpeaking();
+
+    if (sessionStatus === "loading") return;
+
+    if (sessionStatus === "unauthenticated") {
+      router.push(buildLoginUrlForFeature());
+      return;
+    }
+
     scrollToFeature(feature.id);
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", `#${feature.id}`);

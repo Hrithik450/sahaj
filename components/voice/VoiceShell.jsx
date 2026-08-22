@@ -29,6 +29,12 @@ export function markFeatureVoiceIntent(domainKey, featureId) {
   sessionStorage.setItem(FEATURE_VOICE_KEY, `${domainKey}:${featureId}`);
 }
 
+export function clearFeatureVoiceIntent() {
+  if (typeof window !== "undefined") {
+    sessionStorage.removeItem(FEATURE_VOICE_KEY);
+  }
+}
+
 function readFeatureVoiceIntent() {
   if (typeof window === "undefined") return null;
   const raw = sessionStorage.getItem(FEATURE_VOICE_KEY);
@@ -36,12 +42,6 @@ function readFeatureVoiceIntent() {
   const [domainKey, featureId] = raw.split(":");
   if (!domainKey || !featureId) return null;
   return { domainKey, featureId };
-}
-
-function clearFeatureVoiceIntent() {
-  if (typeof window !== "undefined") {
-    sessionStorage.removeItem(FEATURE_VOICE_KEY);
-  }
 }
 
 function domainKeyForPath(pathname) {
@@ -93,10 +93,15 @@ export function VoiceShell({ children }) {
       return;
     }
 
+    const featureFromQuery =
+      typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("feature")
+        : null;
     const hash =
       typeof window !== "undefined" ? window.location.hash.slice(1) : "";
-    if (hash) {
-      playFeatureIntro(domainKey, hash, prefs.language);
+    const featureId = featureFromQuery || hash;
+    if (featureId) {
+      playFeatureIntro(domainKey, featureId, prefs.language);
     }
   }, [prefs.voiceEnabled, prefs.language, pathname]);
 

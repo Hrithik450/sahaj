@@ -1,6 +1,7 @@
 "use client";
 
 import { DomainFeatures } from "@/components/domain/DomainFeatures";
+import { FeatureHashGuard } from "@/components/domain/FeatureHashGuard";
 import { FeatureNav } from "@/components/domain/FeatureNav";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { bankingPage } from "@/lib/features";
@@ -12,6 +13,7 @@ export function BankingPageContent() {
 
   return (
     <main className="section-x pb-16">
+      <FeatureHashGuard />
       <div className="mx-auto max-w-6xl pt-14 sm:pt-14 md:pt-16 lg:pt-16">
         <p className="caption text-xs font-semibold uppercase tracking-widest">
           {pickLang(bankingPage.PAGE.label, language)}
