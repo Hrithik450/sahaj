@@ -127,6 +127,8 @@ export function Simplifier({ domain, samples }) {
     setLoading(true);
     setError("");
 
+    let resultData = null;
+
     try {
       const response = await fetch("/api/simplify", {
         method: "POST",
@@ -136,7 +138,8 @@ export function Simplifier({ domain, samples }) {
           domain,
           language: prefs.language,
           need: prefs.need,
-          allowNoticeFallback: Boolean(activeSampleId && !fromPhoto),
+          sampleId:
+            activeSampleId && !fromPhoto ? activeSampleId : undefined,
         }),
       });
 
@@ -147,31 +150,32 @@ export function Simplifier({ domain, samples }) {
         );
       }
 
+      resultData = data;
       setResult(data);
-
-      if (prefs.voiceEnabled) {
-        const speech = formatSimplifierSpeech(data, prefs.language);
-        if (!speech) return;
-
-        const sampleMatch =
-          activeSampleId &&
-          !fromPhoto &&
-          samples.find(
-            (sample) =>
-              sample.id === activeSampleId && sample.text === inputText,
-          );
-
-        if (sampleMatch) {
-          await playSampleSimplifierSpeech(sampleMatch.id, prefs.language);
-        } else if (fromPhoto) {
-          await speakSarvam(speech, { language: prefs.language });
-        }
-      }
     } catch (err) {
       setError(err.message || pickLang(SIMPLIFIER.genericError, language));
       setResult(null);
     } finally {
       setLoading(false);
+    }
+
+    if (!resultData || !prefs.voiceEnabled) return;
+
+    const speech = formatSimplifierSpeech(resultData, prefs.language);
+    if (!speech) return;
+
+    const sampleMatch =
+      activeSampleId &&
+      !fromPhoto &&
+      samples.find(
+        (sample) =>
+          sample.id === activeSampleId && sample.text === inputText,
+      );
+
+    if (sampleMatch) {
+      void playSampleSimplifierSpeech(sampleMatch.id, prefs.language);
+    } else if (fromPhoto) {
+      void speakSarvam(speech, { language: prefs.language });
     }
   }
 

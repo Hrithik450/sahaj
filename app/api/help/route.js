@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { SITE_CHAT_KNOWLEDGE } from "@/lib/site-chat-knowledge";
 
 /** Help bubble only — always the lite model, separate from GEMINI_TEXT_MODEL in lib/ai.js */
-const HELP_MODEL =
-  process.env.GEMINI_HELP_MODEL ?? "gemini-3.1-flash-lite";
+const HELP_MODEL = (process.env.GEMINI_HELP_MODEL ?? "gemini-3.1-flash-lite")
+  .trim()
+  .replace(/\.+$/, "");
 
 export async function POST(request) {
   try {

@@ -11,23 +11,28 @@ export async function POST(request) {
       domain = "gov",
       language = "en",
       need = null,
-      allowNoticeFallback = false,
+      sampleId = null,
     } = body;
 
     if (!text || typeof text !== "string") {
       return NextResponse.json({ error: "Text is required." }, { status: 400 });
     }
 
-    const aiResult = await simplifyText({ text, language, need, domain });
-    if (aiResult) {
-      return NextResponse.json(aiResult);
+    const trimmed = text.trim();
+
+    const fallback = findFallbackForText(trimmed, domain, language, sampleId);
+    if (fallback) {
+      return NextResponse.json(fallback);
     }
 
-    if (allowNoticeFallback) {
-      const fallback = findFallbackForText(text, domain, language);
-      if (fallback) {
-        return NextResponse.json(fallback);
-      }
+    const aiResult = await simplifyText({
+      text: trimmed,
+      language,
+      need,
+      domain,
+    });
+    if (aiResult) {
+      return NextResponse.json(aiResult);
     }
 
     return NextResponse.json(
