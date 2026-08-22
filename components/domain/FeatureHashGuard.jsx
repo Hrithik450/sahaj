@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
-  buildLoginUrlForFeature,
   domainKeyFromPath,
   featureIdFromWindow,
   isFeatureId,
@@ -19,27 +18,17 @@ function scrollToFeature(featureId) {
   });
 }
 
-/**
- * - Not signed in + deep link → login, then landing features (user navigates)
- * - Signed in + deep link → scroll to that task + play intro (normal navigation)
- */
 export function FeatureHashGuard() {
   const { status } = useSession();
   const pathname = usePathname();
-  const router = useRouter();
   const { prefs } = useAccessability();
   const domainKey = domainKeyFromPath(pathname);
 
   useEffect(() => {
-    if (status === "loading" || !domainKey) return;
+    if (!domainKey) return;
 
     const featureId = featureIdFromWindow();
     if (!featureId || !isFeatureId(domainKey, featureId)) return;
-
-    if (status === "unauthenticated") {
-      router.replace(buildLoginUrlForFeature());
-      return;
-    }
 
     scrollToFeature(featureId);
 
@@ -51,17 +40,10 @@ export function FeatureHashGuard() {
       window.history.replaceState(null, "", next);
     }
 
-    if (prefs.voiceEnabled) {
+    if (status === "authenticated" && prefs.voiceEnabled) {
       void playFeatureIntro(domainKey, featureId, prefs.language);
     }
-  }, [
-    status,
-    domainKey,
-    pathname,
-    router,
-    prefs.voiceEnabled,
-    prefs.language,
-  ]);
+  }, [status, domainKey, pathname, prefs.voiceEnabled, prefs.language]);
 
   return null;
 }

@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import {
   ClipboardList,
   FileText,
@@ -22,7 +20,6 @@ import {
   LANDING_FEATURES_UI,
   LANDING_FEATURES_VOICE_EVENT,
 } from "@/lib/features";
-import { buildLoginUrlForFeature } from "@/lib/routes";
 import { pickLang } from "@/lib/utils";
 import { playLandingGovernmentFeaturesIntro } from "@/lib/tts/voice";
 
@@ -46,29 +43,9 @@ function getFeatureCopy(domain, featureId, language) {
   };
 }
 
-function FeatureCard({
-  feature,
-  index,
-  domainHref,
-  domain,
-  language,
-  sessionStatus,
-}) {
+function FeatureCard({ feature, index, domainHref, domain, language }) {
   const Icon = FEATURE_ICONS[feature.id] ?? FileText;
   const copy = getFeatureCopy(domain, feature.id, language);
-  const router = useRouter();
-
-  function handleLearnMore(e) {
-    if (sessionStatus === "loading") {
-      e.preventDefault();
-      return;
-    }
-
-    if (sessionStatus === "unauthenticated") {
-      e.preventDefault();
-      router.push(buildLoginUrlForFeature());
-    }
-  }
 
   return (
     <div className="relative p-4" data-feature-card>
@@ -124,7 +101,6 @@ function FeatureCard({
 
         <Link
           href={`${domainHref}?feature=${feature.id}`}
-          onClick={handleLearnMore}
           className="btn-ink mt-5 bg-white px-5 py-2 text-sm"
         >
           {pickLang(LANDING_FEATURES_UI.learnMore, language)}
@@ -138,7 +114,6 @@ export function Features() {
   const [domain, setDomain] = useState(DEFAULT_FEATURE_DOMAIN);
   const scrollRef = useRef(null);
   const { prefs } = useAccessability();
-  const { status: sessionStatus } = useSession();
   const language = prefs.language;
   const active = FEATURE_DOMAINS[domain];
 
@@ -232,7 +207,6 @@ export function Features() {
               domainHref={active.href}
               domain={domain}
               language={language}
-              sessionStatus={sessionStatus}
             />
           ))}
         </div>
@@ -246,7 +220,6 @@ export function Features() {
               domainHref={active.href}
               domain={domain}
               language={language}
-              sessionStatus={sessionStatus}
             />
           ))}
         </div>
@@ -267,7 +240,6 @@ export function Features() {
                 domainHref={active.href}
                 domain={domain}
                 language={language}
-                sessionStatus={sessionStatus}
               />
             </div>
           ))}

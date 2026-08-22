@@ -5,8 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import {
-  isFeatureGateLogin,
-  POST_LOGIN_FEATURES_URL,
+  isSimplifyGateLogin,
 } from "@/lib/routes";
 import {
   playSignInRequiredIntro,
@@ -37,9 +36,9 @@ const LOGIN_UI = {
     kn: "ನಿಮ್ಮ ಸೆಟಪ್ ಉಳಿಸಿ",
   },
   featureBody: {
-    en: "Sign in with Google to use Sahaj tools. After that, we'll take you back to Features so you can choose where to go.",
-    hi: "सहज की सुविधाएँ इस्तेमाल करने के लिए Google से साइन इन करें। उसके बाद हम आपको Features पर वापस ले जाएंगे — वहाँ से आप चुन सकते हैं।",
-    kn: "ಸಹಜ ಸಾಧನಗಳನ್ನು ಬಳಸಲು Google ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ. ನಂತರ ನಾವು ನಿಮ್ಮನ್ನು Features ವಿಭಾಗಕ್ಕೆ ಕರೆದೊಯ್ಯುತ್ತೇವೆ — ಅಲ್ಲಿಂದ ನೀವು ಆಯ್ಕೆ ಮಾಡಬಹುದು.",
+    en: "Sign in with Google to simplify your first notice. After that, we'll bring you right back to Document Simplifier on the Government page.",
+    hi: "अपना पहला नोटिस सरल करने के लिए Google से साइन इन करें। उसके बाद हम आपको सरकार पृष्ठ पर दस्तावेज़ सरलीकरण में वापस ले जाएंगे।",
+    kn: "ನಿಮ್ಮ ಮೊದಲ ಸೂಚನೆಯನ್ನು ಸರಳಗೊಳಿಸಲು Google ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ. ನಂತರ ನಾವು ನಿಮ್ಮನ್ನು ಸರ್ಕಾರ ಪುಟದ ದಾಖಲೆ ಸರಳೀಕರಣಕ್ಕೆ ಮರಳಿ ಕರೆದೊಯ್ಯುತ್ತೇವೆ.",
   },
   optionalBody: {
     en: "Sahaj works without an account. Sign in with Google to sync your accessibility preferences across devices when you are ready.",
@@ -77,21 +76,19 @@ export function LoginCard() {
   const searchParams = useSearchParams();
   const { prefs } = useAccessability();
   const language = prefs.language;
-  const fromFeature = isFeatureGateLogin(searchParams);
-  const callbackUrl = fromFeature
-    ? POST_LOGIN_FEATURES_URL
-    : searchParams.get("callbackUrl") || "/";
+  const fromSimplifyGate = isSimplifyGateLogin(searchParams);
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   useEffect(() => {
     const title = pickLang(
-      fromFeature ? LOGIN_UI.pageTitleFeature : LOGIN_UI.pageTitleOptional,
+      fromSimplifyGate ? LOGIN_UI.pageTitleFeature : LOGIN_UI.pageTitleOptional,
       language,
     );
     document.title = `${title} · Sahaj`;
-  }, [fromFeature, language]);
+  }, [fromSimplifyGate, language]);
 
   useEffect(() => {
-    if (fromFeature) {
+    if (fromSimplifyGate) {
       unlockVoice();
       void playSignInRequiredIntro(language);
       return;
@@ -99,25 +96,25 @@ export function LoginCard() {
 
     if (!prefs.voiceEnabled) return;
     void speakSarvam(pickLang(LOGIN_UI.optionalVoice, language), { language });
-  }, [fromFeature, prefs.voiceEnabled, language]);
+  }, [fromSimplifyGate, prefs.voiceEnabled, language]);
 
   return (
     <div className="ink-card p-8 sm:p-10">
       <p className="caption text-xs font-semibold uppercase tracking-widest">
         {pickLang(
-          fromFeature ? LOGIN_UI.featureLabel : LOGIN_UI.optionalLabel,
+          fromSimplifyGate ? LOGIN_UI.featureLabel : LOGIN_UI.optionalLabel,
           language,
         )}
       </p>
       <h1 className="landing-strong mt-2 text-[clamp(1.75rem,4vw,2.25rem)]">
         {pickLang(
-          fromFeature ? LOGIN_UI.featureTitle : LOGIN_UI.optionalTitle,
+          fromSimplifyGate ? LOGIN_UI.featureTitle : LOGIN_UI.optionalTitle,
           language,
         )}
       </h1>
       <p className="caption mt-3 text-sm leading-relaxed sm:text-base">
         {pickLang(
-          fromFeature ? LOGIN_UI.featureBody : LOGIN_UI.optionalBody,
+          fromSimplifyGate ? LOGIN_UI.featureBody : LOGIN_UI.optionalBody,
           language,
         )}
       </p>
@@ -134,7 +131,7 @@ export function LoginCard() {
         {pickLang(LOGIN_UI.continueGoogle, language)}
       </button>
 
-      {!fromFeature && (
+      {!fromSimplifyGate && (
         <p className="caption mt-4 text-xs leading-relaxed text-[var(--muted)]">
           {pickLang(LOGIN_UI.optionalFootnote, language)}
         </p>

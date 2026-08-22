@@ -1,10 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { markFeatureVoiceIntent } from "@/components/voice/VoiceShell";
-import { buildLoginUrlForFeature } from "@/lib/routes";
 import { playFeatureIntro, stopSpeaking } from "@/lib/tts/voice";
 import { pickLang } from "@/lib/utils";
 
@@ -55,19 +52,10 @@ function scrollToFeature(id) {
 
 export function FeatureNav({ features, domainKey, ariaLabel = "Features" }) {
   const { prefs } = useAccessability();
-  const { status: sessionStatus } = useSession();
-  const router = useRouter();
   const language = prefs.language;
 
   function handleFeatureClick(feature) {
     stopSpeaking();
-
-    if (sessionStatus === "loading") return;
-
-    if (sessionStatus === "unauthenticated") {
-      router.push(buildLoginUrlForFeature());
-      return;
-    }
 
     scrollToFeature(feature.id);
     if (typeof window !== "undefined") {

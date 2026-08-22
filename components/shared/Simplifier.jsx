@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Camera, Loader2, Upload } from "lucide-react";
 import { useAccessability } from "@/components/accessability/AccessabilityProvider";
 import { VoiceReplayButton } from "@/components/voice/VoiceReplayButton";
+import { buildLoginUrlForGovernmentSimplify } from "@/lib/routes";
 import { formatSimplifierSpeech } from "@/lib/tts/simplifier-speech";
 import { pickLang } from "@/lib/utils";
 import { extractTextFromImage } from "@/lib/utils";
@@ -80,6 +83,8 @@ const SIMPLIFIER = {
 
 export function Simplifier({ domain, samples }) {
   const { prefs } = useAccessability();
+  const { status: sessionStatus } = useSession();
+  const router = useRouter();
   const language = prefs.language;
   const fileRef = useRef(null);
   const cameraRef = useRef(null);
@@ -104,6 +109,18 @@ export function Simplifier({ domain, samples }) {
   async function runSimplify(inputText = text) {
     if (!inputText.trim()) {
       setError(pickLang(SIMPLIFIER.emptyError, language));
+      return;
+    }
+
+    if (
+      domain === "gov" &&
+      sessionStatus === "unauthenticated"
+    ) {
+      router.push(buildLoginUrlForGovernmentSimplify());
+      return;
+    }
+
+    if (domain === "gov" && sessionStatus === "loading") {
       return;
     }
 
