@@ -6,6 +6,8 @@ import { useAccessability } from "@/components/accessability/AccessabilityProvid
 import { pickLang } from "@/lib/i18n";
 
 const SPOT_PAD = 10;
+const TIP_WIDTH = 272;
+const TIP_MARGIN = 16;
 const STORAGE_KEY = "sahaj-voice-onboarding-dismissed";
 const STEP_KEY = "sahaj-onboarding-step";
 const ONBOARDING_CHANGE = "sahaj-voice-onboarding-change";
@@ -49,6 +51,29 @@ export const speakerOverlay = {
     kn: "ಸಹಜದಲ್ಲಿ ಸೂಚನೆಗಳು ಮತ್ತು ಮಾರ್ಗದರ್ಶನ ಕೇಳಲು ಸ್ಪೀಕರ್ ಅನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ. ನೀವು ಅದನ್ನು ಯಾವಾಗ ಬೇಕಾದರೂ ಆಫ್ ಮಾಡಬಹುದು.",
   },
 };
+
+function getViewportWidth() {
+  if (typeof window === "undefined") return 0;
+  return window.visualViewport?.width ?? window.innerWidth;
+}
+
+function getTooltipStyle(rect) {
+  const top = rect.top + rect.height + SPOT_PAD + 18;
+  const buttonCenter = rect.left + rect.width / 2;
+  const viewportWidth = getViewportWidth();
+  let left = buttonCenter - TIP_WIDTH / 2;
+
+  left = Math.max(
+    TIP_MARGIN,
+    Math.min(left, viewportWidth - TIP_WIDTH - TIP_MARGIN),
+  );
+
+  if (rect.right > viewportWidth - TIP_WIDTH - TIP_MARGIN * 2) {
+    left = Math.max(TIP_MARGIN, rect.right - TIP_WIDTH);
+  }
+
+  return { top, left, width: TIP_WIDTH };
+}
 
 function subscribeOnboarding(callback) {
   window.addEventListener(ONBOARDING_CHANGE, callback);
@@ -99,31 +124,39 @@ export function OnboardingOverlay() {
   useEffect(() => {
     if (!visible) return;
 
-    let frame = 0;
     let raf = 0;
-    let lastTop = null;
-    let steady = 0;
 
-    const follow = () => {
-      const el = document.getElementById(activeOverlay.targetId);
-      const top = el?.getBoundingClientRect().top ?? null;
-      measure();
-      steady = top !== null && top === lastTop ? steady + 1 : 0;
-      lastTop = top;
-      frame += 1;
-      if (steady < 3 && frame < 90) raf = requestAnimationFrame(follow);
+    const scheduleMeasure = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(measure);
     };
 
-    raf = requestAnimationFrame(follow);
-    window.addEventListener("resize", measure);
-    window.addEventListener("scroll", measure, { passive: true });
+    scheduleMeasure();
+
+    const el = document.getElementById(activeOverlay.targetId);
+    const navActions = document.getElementById("nav-actions");
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(scheduleMeasure)
+        : null;
+
+    if (el) resizeObserver?.observe(el);
+    if (navActions) resizeObserver?.observe(navActions);
+
+    window.addEventListener("resize", scheduleMeasure);
+    window.addEventListener("scroll", scheduleMeasure, { passive: true });
+    window.visualViewport?.addEventListener("resize", scheduleMeasure);
+    window.visualViewport?.addEventListener("scroll", scheduleMeasure);
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", measure);
-      window.removeEventListener("scroll", measure);
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", scheduleMeasure);
+      window.removeEventListener("scroll", scheduleMeasure);
+      window.visualViewport?.removeEventListener("resize", scheduleMeasure);
+      window.visualViewport?.removeEventListener("scroll", scheduleMeasure);
     };
-  }, [visible, measure, activeOverlay]);
+  }, [visible, measure, activeOverlay.targetId]);
 
   const dismiss = useCallback(() => {
     localStorage.setItem(STORAGE_KEY, "1");
@@ -169,12 +202,7 @@ export function OnboardingOverlay() {
   const spotWidth = rect.width + SPOT_PAD * 2;
   const spotHeight = rect.height + SPOT_PAD * 2;
   const spotBR = spotHeight / 2;
-
-  const tipCenterX = Math.max(
-    148,
-    Math.min(rect.left + rect.width / 2, window.innerWidth - 148),
-  );
-  const tipTop = rect.top + rect.height + SPOT_PAD + 18;
+  const tooltip = getTooltipStyle(rect);
 
   return (
     <div>
@@ -217,11 +245,11 @@ export function OnboardingOverlay() {
       />
 
       <div
-        className="fixed z-[202] w-[272px] pointer-events-auto"
+        className="fixed z-[202] pointer-events-auto"
         style={{
-          top: tipTop,
-          left: tipCenterX,
-          transform: "translateX(-50%)",
+          top: tooltip.top,
+          left: tooltip.left,
+          width: tooltip.width,
         }}
         onClick={(e) => e.stopPropagation()}
       >

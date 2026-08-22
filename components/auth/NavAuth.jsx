@@ -22,7 +22,7 @@ export function NavAuth() {
   if (status === "loading") {
     return (
       <span
-        className={`${NAV_AUTH_BTN_CLASS} text-xs font-semibold text-[var(--muted)]`}
+        className={`${NAV_AUTH_BTN_CLASS} w-9 text-xs font-semibold text-[var(--muted)] lg:min-w-[6.75rem]`}
         aria-hidden
       >
         …
