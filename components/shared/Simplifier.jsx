@@ -9,7 +9,7 @@ import { VoiceReplayButton } from "@/components/voice/VoiceReplayButton";
 import { buildLoginUrlForGovernmentSimplify } from "@/lib/routes";
 import { formatSimplifierSpeech } from "@/lib/tts/simplifier-speech";
 import { pickLang } from "@/lib/utils";
-import { extractTextFromImage } from "@/lib/utils";
+import { extractTextFromImage } from "@/lib/ocr";
 import { playSampleSimplifierSpeech, speakSarvam } from "@/lib/tts/voice";
 
 const SIMPLIFIER = {

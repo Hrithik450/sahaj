@@ -4,6 +4,20 @@ import { useAccessability } from "@/components/accessability/AccessabilityProvid
 import { markFeatureVoiceIntent } from "@/components/voice/VoiceShell";
 import { playFeatureIntro, stopSpeaking } from "@/lib/tts/voice";
 import { pickLang } from "@/lib/utils";
+import { HorizontalScrollRow } from "@/components/shared/HorizontalScrollRow";
+
+const FEATURE_NAV_SCROLL = {
+  scrollLeft: {
+    en: "Scroll features left",
+    hi: "सुविधाएं बाईं स्क्रॉल करें",
+    kn: "ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಎಡಕ್ಕೆ ಸ್ಕ್ರಾಲ್ ಮಾಡಿ",
+  },
+  scrollRight: {
+    en: "Scroll features right",
+    hi: "सुविधाएं दाईं स्क्रॉल करें",
+    kn: "ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಬಲಕ್ಕೆ ಸ್ಕ್ರಾಲ್ ಮಾಡಿ",
+  },
+};
 
 const FEATURE_TITLES = {
   government: {
@@ -69,16 +83,19 @@ export function FeatureNav({ features, domainKey, ariaLabel = "Features" }) {
   }
 
   return (
-    <nav
-      className="flex flex-nowrap gap-4 overflow-x-auto scroll-smooth py-8 pb-4 sm:gap-5 lg:flex-wrap lg:overflow-visible lg:pb-8"
-      aria-label={ariaLabel}
+    <HorizontalScrollRow
+      innerClassName="flex flex-nowrap gap-4 overflow-x-auto py-8 pb-4 sm:gap-5 lg:flex-wrap lg:overflow-visible lg:pb-8"
+      hideArrowsFrom="lg"
+      scrollAriaLabel={ariaLabel}
+      leftAriaLabel={pickLang(FEATURE_NAV_SCROLL.scrollLeft, language)}
+      rightAriaLabel={pickLang(FEATURE_NAV_SCROLL.scrollRight, language)}
     >
       {features.map((feature) => (
         <button
           key={feature.id}
           type="button"
           onClick={() => handleFeatureClick(feature)}
-          className="sticker-label ink-lift shrink-0 rounded-[1.75rem] border border-[var(--ink)] bg-transparent px-5 py-3 text-left shadow-[-1.5px_1.5px_0_0_var(--ink)] sm:px-6"
+          className="scroll-snap-item sticker-label ink-lift shrink-0 rounded-[1.75rem] border border-[var(--ink)] bg-transparent px-5 py-3 text-left shadow-[-1.5px_1.5px_0_0_var(--ink)] sm:px-6"
         >
           <span className="block leading-tight">
             {pickLang(FEATURE_TITLES[domainKey]?.[feature.id], language) ||
@@ -86,6 +103,6 @@ export function FeatureNav({ features, domainKey, ariaLabel = "Features" }) {
           </span>
         </button>
       ))}
-    </nav>
+    </HorizontalScrollRow>
   );
 }

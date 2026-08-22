@@ -410,6 +410,52 @@ html[data-need="cognitive"] .ink-card {
   box-shadow: -1px 1px 0 0 var(--ink);
 }
 
+.horizontal-scroll-row {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.horizontal-scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
+.horizontal-scroll-snap {
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 2.25rem;
+}
+
+.scroll-snap-item {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.scroll-hint {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ink);
+  box-shadow: -1px 1px 0 0 var(--ink);
+}
+
+.scroll-hint-left {
+  left: 0.25rem;
+}
+
+.scroll-hint-right {
+  right: 0.25rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .paper .footer-arrow,
   .paper .group:hover .footer-arrow,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ClipboardList,
@@ -22,6 +22,7 @@ import {
 } from "@/lib/features";
 import { pickLang } from "@/lib/utils";
 import { playLandingGovernmentFeaturesIntro } from "@/lib/tts/voice";
+import { HorizontalScrollRow } from "@/components/shared/HorizontalScrollRow";
 
 const FEATURE_ICONS = {
   simplify: FileText,
@@ -112,7 +113,6 @@ function FeatureCard({ feature, index, domainHref, domain, language }) {
 
 export function Features() {
   const [domain, setDomain] = useState(DEFAULT_FEATURE_DOMAIN);
-  const scrollRef = useRef(null);
   const { prefs } = useAccessability();
   const language = prefs.language;
   const active = FEATURE_DOMAINS[domain];
@@ -135,19 +135,6 @@ export function Features() {
       );
     };
   }, [prefs.voiceEnabled, prefs.language]);
-
-  function scroll(dir) {
-    const container = scrollRef.current;
-    if (!container) return;
-    const firstCard = container.querySelector("[data-feature-card]");
-    if (!firstCard) return;
-    const gap = parseFloat(getComputedStyle(container).gap) || 24;
-    const step = firstCard.offsetWidth + gap;
-    container.scrollBy({
-      left: dir === "right" ? step : -step,
-      behavior: "smooth",
-    });
-  }
 
   return (
     <section
@@ -179,25 +166,6 @@ export function Features() {
           </div>
         </div>
 
-        <div className="mb-6 hidden justify-end gap-3 sm:flex lg:hidden">
-          <button
-            type="button"
-            onClick={() => scroll("left")}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--ink)] bg-[var(--ink)] text-white"
-            aria-label={pickLang(LANDING_FEATURES_UI.scrollLeft, language)}
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            onClick={() => scroll("right")}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--ink)] bg-[var(--ink)] text-white"
-            aria-label={pickLang(LANDING_FEATURES_UI.scrollRight, language)}
-          >
-            →
-          </button>
-        </div>
-
         <div className="hidden gap-8 lg:grid lg:grid-cols-3">
           {active.features.slice(0, 3).map((feature, index) => (
             <FeatureCard
@@ -224,15 +192,16 @@ export function Features() {
           ))}
         </div>
 
-        <div
-          ref={scrollRef}
-          className="flex gap-6 overflow-x-auto scroll-smooth pb-4 lg:hidden"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        <HorizontalScrollRow
+          className="lg:hidden"
+          innerClassName="flex gap-6 overflow-x-auto pb-4"
+          leftAriaLabel={pickLang(LANDING_FEATURES_UI.scrollLeft, language)}
+          rightAriaLabel={pickLang(LANDING_FEATURES_UI.scrollRight, language)}
         >
           {active.features.map((feature, index) => (
             <div
               key={feature.id}
-              className="w-[min(100%,320px)] flex-none sm:w-[min(45%,320px)]"
+              className="scroll-snap-item w-[min(100%,320px)] flex-none sm:w-[min(45%,320px)]"
             >
               <FeatureCard
                 feature={feature}
@@ -243,7 +212,7 @@ export function Features() {
               />
             </div>
           ))}
-        </div>
+        </HorizontalScrollRow>
       </div>
     </section>
   );
